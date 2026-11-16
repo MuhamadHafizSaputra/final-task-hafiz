@@ -16,7 +16,7 @@
 
 ## Jenis TA: Skripsi Inovasi Produk
 
-Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Dalam kasus ini: **GitOps deployment system untuk InvenioRDM pada Kubernetes**.
+Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Dalam kasus ini: **Sistem Penimbangan dan Pencatatan Data Kambing Berbasis IoT dengan Deteksi Bobot Stabil dan Sinkronisasi Offline-First**.
 
 ---
 
@@ -120,6 +120,72 @@ Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Dalam kasu
 - Bahasa Inggris hanya untuk: judul, abstract, istilah teknis
 - Istilah teknis boleh dalam bahasa Inggris dengan penjelasan Indonesia pada pertama kali disebut
 - Gunakan Glosarium untuk jargon yang membingungkan
+
+### Gaya Penulisan Proposal
+
+Aturan berikut dirumuskan dari pola penulisan pada `examples/contoh_proposal.pdf`. Pedoman TA tetap menjadi aturan utama jika terdapat perbedaan.
+
+#### Struktur paragraf
+
+- Bangun alur argumentasi dari konteks umum menuju masalah khusus, dampak masalah, pendekatan yang tersedia, keterbatasan pendekatan, lalu posisi penelitian.
+- Satu paragraf memuat satu gagasan utama dan biasanya terdiri atas 3--6 kalimat yang saling terhubung.
+- Awali paragraf dengan kalimat topik. Lanjutkan dengan penjelasan, bukti atau sitasi, lalu tutup dengan implikasi atau hubungan ke paragraf berikutnya.
+- Gunakan transisi eksplisit, seperti `Selain itu`, `Meskipun demikian`, `Sementara itu`, `Dengan demikian`, dan `Berdasarkan hal tersebut`.
+- Hindari paragraf yang hanya berisi definisi, daftar teknologi, atau klaim tanpa hubungan dengan masalah penelitian.
+- Hubungkan setiap uraian teori atau penelitian terdahulu dengan kebutuhan produk yang diusulkan.
+
+#### Struktur kalimat
+
+- Utamakan kalimat deklaratif yang jelas dengan pola subjek--predikat--objek atau subjek--predikat--keterangan.
+- Jaga satu kalimat pada sekitar 15--30 kata jika tidak ada alasan untuk membuatnya lebih panjang.
+- Gunakan kalimat majemuk hanya ketika hubungan sebab, akibat, kontras, atau tujuan perlu dinyatakan secara langsung.
+- Pecah kalimat yang memuat lebih dari dua gagasan utama.
+- Pastikan setiap kata rujukan memiliki antecedent yang jelas; hindari `hal ini`, `tersebut`, atau `yang` tanpa rujukan yang tegas.
+- Gunakan kalimat aktif untuk menjelaskan tindakan penelitian. Gunakan kalimat pasif hanya jika pelaku tidak penting.
+- Hindari klaim absolut, kata mubazir, pengulangan makna, dan bahasa promosi.
+- Bedakan fakta dari rencana: gunakan bentuk lampau atau kini untuk penelitian terdahulu, serta `akan`, `dirancang`, atau `diusulkan` untuk penelitian proposal.
+
+#### Alur penulisan proposal
+
+- `Latar Belakang`: konteks bidang, masalah nyata, bukti atau dampak, pendekatan terdahulu, keterbatasan, dan alasan produk perlu dikembangkan.
+- `Rumusan Masalah`: pertanyaan atau pernyataan masalah yang spesifik, terukur, dan dapat dijawab oleh penelitian.
+- `Batasan Masalah`: ruang lingkup yang dapat diuji; hindari memasukkan tujuan atau hasil yang belum dijamin.
+- `Tujuan Penelitian`: gunakan verba operasional seperti `merancang`, `mengembangkan`, `menguji`, `mengukur`, dan `mengevaluasi`; setiap tujuan harus menjawab rumusan masalah.
+- `Manfaat Penelitian`: pisahkan manfaat akademik dan praktis; jangan menulis manfaat sebagai klaim hasil yang belum dibuktikan.
+- `Penelitian Terkait`: kelompokkan literatur berdasarkan tema atau pendekatan, bukan hanya berdasarkan urutan sumber; jelaskan persamaan, perbedaan, keterbatasan, dan posisi penelitian.
+- `Metode`: jelaskan urutan tahap, masukan, proses, keluaran, instrumen, dan indikator evaluasi.
+
+#### Istilah, angka, dan sitasi
+
+- Definisikan singkatan saat pertama kali digunakan, misalnya `Internet of Things (IoT)`, lalu gunakan bentuk singkat secara konsisten.
+- Gunakan format `dkk.` untuk tiga penulis atau lebih dalam narasi berbahasa Indonesia; gunakan `dan` untuk dua penulis.
+- Pastikan setiap klaim faktual penting memiliki sitasi yang sesuai. Jangan menambahkan sitasi yang belum tersedia di `references.bib`.
+- Pastikan semua sitasi menggunakan kunci BibTeX yang benar. Jangan menulis sitasi naratif seperti `Penulis (Tahun)` tanpa menambahkan entri bibliografi.
+- Gunakan koma desimal dalam teks Indonesia, misalnya `7,52 kg` dan `0,848`.
+- Gunakan satuan SI dan beri spasi antara angka dan satuan, misalnya `10 kg`, `5 m`, dan `90 permintaan per detik`.
+- Tulis rentang dengan tanda hubung en dalam LaTeX, misalnya `5--10`.
+- Gunakan `\textit{}` untuk istilah asing yang belum diserap; beri padanan atau penjelasan bahasa Indonesia saat pertama kali muncul.
+- Konsisten dalam kapitalisasi nama teknologi, nama produk, nama platform, dan istilah metode.
+- Tulis judul tabel dan gambar sebagai deskripsi singkat yang informatif. Setiap tabel atau gambar wajib memiliki `\caption{}` dan `\label{}`.
+
+#### Pemeriksaan sebelum menyelesaikan tulisan
+
+- Periksa alur dari masalah menuju solusi dan pastikan tidak ada lompatan logika.
+- Periksa kesesuaian antara latar belakang, rumusan masalah, batasan, tujuan, manfaat, dan metode.
+- Periksa setiap angka, nama penulis, tahun, DOI, URL, dan klaim teknis terhadap sumber aslinya.
+- Periksa semua sitasi terhadap `references.bib`; kompilasi proposal dengan `pdflatex`, `bibtex`, lalu `pdflatex` dua kali.
+- Periksa kesalahan LaTeX: karakter khusus (`%`, `$`, `&`, `_`, `#`), tabel yang terlalu lebar, label yang tidak unik, dan referensi silang yang tidak ditemukan.
+- Jangan menganggap contoh proposal bebas kesalahan; gunakan pola strukturnya, tetapi perbaiki tata bahasa, ketepatan istilah, sitasi, dan konsistensi sesuai pedoman.
+
+---
+
+## Pedoman untuk AI Assistant (Kewajiban Model)
+
+1. **Jangan pernah mengarang sumber (hallucination):** Kutip hanya referensi yang benar-benar ada dalam `references.bib` atau yang telah divalidasi. Beri tahu pengguna jika sumber hanya dibaca pada tingkat abstrak.
+2. **Jangan asumsikan keputusan desain sebagai final:** Jika suatu keputusan (hardware, software, algoritma) terdaftar sebagai "Open Decision" di `docs/project-context.md`, perlakukan sebagai opsi, bukan ketetapan.
+3. **Tanyakan sebelum membuat pilihan besar:** Mintalah konfirmasi pengguna sebelum mengambil keputusan yang mengubah klaim kebaruan atau cakupan penelitian.
+4. **Validasi setiap pernyataan:** Beri label atau peringatan jika sebuah pernyataan teknis melampaui apa yang sebenarnya dilaporkan dalam makalah yang dikutip.
+5. **Konteks Proyek:** Gunakan file `docs/project-context.md` sebagai referensi utama untuk judul, latar belakang, cakupan, dan detail teknis proyek ini.
 
 ---
 

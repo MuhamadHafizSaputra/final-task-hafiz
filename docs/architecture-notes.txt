@@ -1,0 +1,111 @@
+ARCHITECTURE NOTES — CURRENT DIRECTION
+Date: 2026-11-12
+
+Current decision:
+Use Option C: MQTT/Broker real-time cloud architecture.
+
+Data flow:
+Load cell -> HX711 -> ESP32 -> MQTT broker -> backend consumer/API -> Supabase/PostgreSQL -> native mobile app.
+
+Optional realtime path:
+MQTT broker -> mobile app subscription, only if security and mobile MQTT support are validated.
+Preferred safer path:
+MQTT broker -> backend consumer -> database/API -> mobile app.
+
+Option comparison:
+
+A. Local-first:
+ESP32 -> BLE/local Wi-Fi -> native mobile app -> SQLite -> Supabase.
+- Internet not required during weighing.
+- Mobile app processes samples locally.
+- Strongest offline-first fit.
+- Phone must be near scale.
+- Good for field data capture.
+
+B. Cloud-direct:
+ESP32 -> Wi-Fi/4G -> Supabase/API -> mobile app.
+- Phone can be far away.
+- Internet required at scale.
+- ESP32 or backend must perform more processing.
+- Direct database access from ESP32 is not preferred; use an API or broker.
+
+C. MQTT/broker real-time cloud:
+ESP32 -> MQTT broker -> backend consumer -> Supabase/PostgreSQL -> mobile app.
+- Current choice.
+- Good for telemetry and remote monitoring.
+- Internet required at ESP32 location.
+- Broker handles message delivery; database stores durable records.
+- Backend should authenticate devices, validate payloads, deduplicate messages, process measurements, and write database records.
+- MQTT broker is not a replacement for the database.
+- MQTT messages are not automatically permanent records unless backend consumes and stores them.
+
+Stable-weight detection definition:
+Stable-weight detection is not a property created by Option A, B, or C. It is a measurement-processing procedure that decides whether a sequence of load-cell readings contains a sufficiently stable interval, then derives one final weight from that interval.
+
+Proposed cloud/MQTT flow:
+1. ESP32 reads load cell through HX711.
+2. ESP32 publishes timestamped raw readings to MQTT.
+3. Backend consumer subscribes to the device topic.
+4. Backend groups readings into a weighing session using device_id, animal_id/tag, session_id, and time boundaries.
+5. Backend applies the selected filter, if any.
+6. Backend evaluates a rolling/sliding time window.
+7. Backend calculates dispersion in each candidate window.
+8. Backend accepts a window only when defined duration, sample count, and dispersion limits pass.
+9. Backend derives final weight from accepted window, preferably median after the method is validated.
+10. Backend calculates quality metrics and status.
+11. Backend stores weighing, samples, and quality data in one database transaction.
+12. Mobile app reads status/history through authenticated API or realtime database channel.
+
+Important stable-weight debate:
+
+1. 'Stable' does not mean animal completely motionless.
+   It means readings fluctuate within an explicitly defined tolerance for an explicitly defined duration.
+
+2. Lowest variance alone is unsafe.
+   An animal can have a short low-variance interval while stepping on or leaving the platform. Require minimum duration and session/occupancy rules.
+
+3. Filtering does not equal stability.
+   A filter can make noisy readings look smooth. Stability must be evaluated with raw or clearly identified filtered data, and both must be retained for audit.
+
+4. Median does not detect stability.
+   Median only summarizes an already accepted window. It should not be the sole acceptance rule.
+
+5. A fixed variance threshold may not fit every weight.
+   Validate threshold against reference-scale trials, animal movement, sensor resolution, and weight range. Consider standard deviation or robust spread (MAD/IQR) as comparison metrics.
+
+6. MQTT delivery does not prove measurement quality.
+   QoS 1 helps delivery and may produce duplicates; it does not make a reading stable or accurate. Use message_id/session_id and idempotency handling.
+
+7. Cloud processing adds latency but not necessarily measurement error.
+   For remote monitoring, backend processing is acceptable if timestamps, ordering, missing messages, duplicate handling, and session boundaries are controlled.
+
+8. Stable-weight detection and weighing accuracy are different claims.
+   Stability evaluates repeatability of readings during one event. Accuracy requires comparison against a reference scale.
+
+9. Re-weigh rejection needs a defined rule.
+   Do not call every failed window a data loss. Store rejected sessions and rejection reasons for evaluation.
+
+10. Final weight must be reproducible.
+    Store raw samples, filtered samples if used, window boundaries, algorithm version, thresholds, sample count, variance/stddev, and final aggregation method.
+
+Recommended initial acceptance model (parameters remain to be tested, not final):
+- session begins when animal/tag is detected and load exceeds entry threshold;
+- collect warm-up readings;
+- process a rolling time window;
+- require minimum window duration;
+- require minimum sample count;
+- calculate variance/stddev and robust spread;
+- accept only if thresholds pass for consecutive windows;
+- final weight = median of accepted window;
+- end session after stable result plus exit condition or timeout;
+- reject/review on timeout, missing samples, excessive spread, overload, or implausible transition.
+
+Database mapping:
+- weighings: one weighing session and final weight.
+- weighing_samples: timestamped raw/filtered readings received from MQTT.
+- weighing_quality: accepted window, statistics, thresholds, algorithm version, and rejection reason.
+- sync_operations: mainly useful for client-side synchronization; MQTT backend ingestion also needs message idempotency.
+- audit_logs: processing and data-change audit trail.
+
+Scope warning:
+Option C changes the current offline-first architecture. If ESP32 cannot reach internet, MQTT ingestion stops unless ESP32 has a local durable buffer or a gateway stores messages and forwards them later. Do not claim offline-first for the full weighing path without designing and testing that buffer/replay path.

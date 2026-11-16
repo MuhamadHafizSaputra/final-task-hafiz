@@ -1,0 +1,772 @@
+// DBML for dbdiagram.io
+// Marketplace intentionally excluded from current implementation scope.
+
+Project iot_livestock {
+  database_type: 'PostgreSQL'
+  Note: 'IoT livestock weighing and recording system'
+}
+
+Enum user_role {
+  owner
+  staff
+  veterinarian
+  admin
+}
+
+Enum animal_species {
+  goat
+  sheep
+}
+
+Enum animal_sex {
+  male
+  female
+  unknown
+}
+
+Enum animal_status {
+  active
+  sold
+  dead
+  culled
+}
+
+Enum birth_date_precision {
+  exact
+  estimated
+  unknown
+}
+
+Enum horn_status {
+  horned
+  polled
+  unknown
+}
+
+Enum tag_type {
+  rfid
+  ear_tag
+  visual
+}
+
+Enum device_type {
+  iot_scale
+  mobile
+  reference_scale
+}
+
+Enum device_status {
+  active
+  inactive
+  maintenance
+}
+
+Enum measurement_source {
+  manual
+  iot
+  reference
+}
+
+Enum measurement_method {
+  walk_over
+  stationary
+  manual_entry
+}
+
+Enum quality_status {
+  accepted
+  rejected
+  review
+}
+
+Enum location_type {
+  barn
+  pen
+  paddock
+  pasture
+  other
+}
+
+Enum health_event_type {
+  illness
+  injury
+  diagnosis
+  vet_visit
+  recovery
+  death
+}
+
+Enum medication_type {
+  vaccine
+  dewormer
+  antibiotic
+  other
+}
+
+Enum mating_method {
+  natural
+  artificial_insemination
+}
+
+Enum pregnancy_result {
+  positive
+  negative
+  unknown
+}
+
+Enum breeding_event_type {
+  mating
+  pregnancy_check
+  birth
+}
+
+Enum feed_unit {
+  kg
+  gram
+  liter
+  portion
+}
+
+Enum movement_type {
+  transfer
+  sale
+  death
+  culling
+  birth
+}
+
+Enum transaction_type {
+  purchase
+  sale
+  feed_cost
+  medical_cost
+  other
+}
+
+Enum sync_operation_type {
+  create
+  update
+  delete
+}
+
+Enum sync_status {
+  pending
+  synced
+  failed
+  conflict
+}
+
+Enum audit_action {
+  create
+  update
+  delete
+  sync
+  login
+}
+
+Table organizations {
+  organization_id uuid [pk, default: `gen_random_uuid()`]
+  name varchar(150) [not null]
+  address text
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+}
+
+Table users {
+  user_id uuid [pk]
+  organization_id uuid [not null]
+  full_name varchar(150) [not null]
+  role user_role [not null]
+  phone varchar(30)
+  is_active boolean [not null, default: true]
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+  }
+}
+
+Table animals {
+  animal_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  species animal_species [not null]
+  name varchar(100)
+  breed varchar(100)
+  sex animal_sex [not null]
+  birth_date date
+  birth_date_precision birth_date_precision [not null, default: 'unknown']
+  color varchar(100)
+  facial_pattern text
+  leg_pattern text
+  horn_status horn_status [default: 'unknown']
+  sire_id uuid
+  dam_id uuid
+  status animal_status [not null, default: 'active']
+  status_date date
+  status_reason text
+  notes text
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (organization_id, status)
+    sire_id
+    dam_id
+  }
+}
+
+Table animal_tags {
+  tag_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  tag_code varchar(100) [not null]
+  tag_type tag_type [not null]
+  is_primary boolean [not null, default: false]
+  assigned_at timestamp [not null, default: `now()`]
+  removed_at timestamp
+  removal_reason text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    tag_code [unique]
+    animal_id
+    (animal_id, is_primary)
+  }
+}
+
+Table animal_photos {
+  photo_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  storage_path text [not null]
+  photo_type varchar(30) [not null, default: 'profile']
+  is_primary boolean [not null, default: false]
+  captured_at timestamp
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    (animal_id, is_primary)
+  }
+}
+
+Table devices {
+  device_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  device_code varchar(100) [not null]
+  device_type device_type [not null]
+  manufacturer varchar(100)
+  model varchar(100)
+  firmware_version varchar(50)
+  capacity_kg decimal(8,3)
+  accuracy_kg decimal(8,3)
+  status device_status [not null, default: 'active']
+  last_seen_at timestamp
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    device_code [unique]
+    organization_id
+  }
+}
+
+Table device_calibrations {
+  calibration_id uuid [pk, default: `gen_random_uuid()`]
+  device_id uuid [not null]
+  calibrated_at timestamp [not null]
+  calibrated_by uuid
+  reference_weight_kg decimal(8,3)
+  measured_weight_kg decimal(8,3)
+  offset_value decimal(12,6)
+  scale_factor decimal(12,6)
+  certificate_path text
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    device_id
+    calibrated_at
+  }
+}
+
+Table weighing_sessions {
+  session_id uuid [pk, default: `gen_random_uuid()`]
+  device_id uuid [not null]
+  animal_id uuid
+  started_at timestamp [not null]
+  ended_at timestamp
+  status varchar(20) [not null, default: 'collecting']
+  sample_count int [not null, default: 0]
+  finalized_at timestamp
+  finalized_weight_kg decimal(8,3)
+  finalization_algorithm_version varchar(50)
+  finalization_threshold_version varchar(50)
+  rejection_reason text
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    device_id
+    animal_id
+    status
+  }
+
+  Note: 'MQTT ingestion session. Status transitions: collecting -> processing -> accepted/rejected/timeout. Not an offline-first table.'
+}
+
+Table weighings {
+  weighing_id uuid [pk, default: `gen_random_uuid()`]
+  session_id uuid [not null, unique]
+  animal_id uuid [not null]
+  device_id uuid
+  performed_by uuid
+  measured_at timestamp [not null]
+  weight_kg decimal(8,3) [not null]
+  measurement_source measurement_source [not null]
+  measurement_method measurement_method [not null]
+  stable_weight_detected boolean
+  quality_score decimal(5,2)
+  quality_status quality_status [not null, default: 'review']
+  is_reference_measurement boolean [not null, default: false]
+  synced_at timestamp
+  client_id varchar(100)
+  client_record_id varchar(150)
+  notes text
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    device_id
+    session_id
+    measured_at
+    (client_id, client_record_id) [unique]
+    (animal_id, measured_at)
+  }
+
+  Note: 'Finalized weighing record from weighing_sessions. Growth rate is derived from weighing history and is not stored as a fixed value.'
+}
+
+Table weighing_samples {
+  sample_id bigint [pk, increment]
+  session_id uuid [not null]
+  recorded_at timestamp [not null]
+  raw_weight_kg decimal(8,3) [not null]
+  filtered_weight_kg decimal(8,3)
+  sample_number int [not null]
+
+  indexes {
+    session_id
+    (session_id, sample_number) [unique]
+  }
+
+  Note: 'Raw and filtered load-cell samples from MQTT. Linked to session, not directly to final weighing.'
+}
+
+Table weighing_quality {
+  quality_id uuid [pk, default: `gen_random_uuid()`]
+  session_id uuid [not null, unique]
+  window_duration_ms int
+  sample_count int
+  window_median_kg decimal(8,3)
+  window_mean_kg decimal(8,3)
+  window_variance decimal(12,6)
+  window_stddev_kg decimal(8,3)
+  min_weight_kg decimal(8,3)
+  max_weight_kg decimal(8,3)
+  rejection_reason text
+  algorithm_version varchar(50)
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Quality metrics for the accepted stable window within a session.'
+}
+
+Table animal_measurements {
+  measurement_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  measured_at timestamp [not null]
+  height_cm decimal(6,2)
+  body_length_cm decimal(6,2)
+  heart_girth_cm decimal(6,2)
+  body_condition_score decimal(2,1)
+  performed_by uuid
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    measured_at
+  }
+
+  Note: 'Body condition score uses the proposed 1-5 scale. Validate the range in the database or application.'
+}
+
+Table locations {
+  location_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  name varchar(100) [not null]
+  location_type location_type [not null]
+  description text
+  latitude decimal(10,7)
+  longitude decimal(10,7)
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (organization_id, name) [unique]
+  }
+}
+
+Table health_events {
+  health_event_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  event_type health_event_type [not null]
+  event_date date [not null]
+  diagnosis text
+  symptoms text
+  treatment_summary text
+  veterinarian_name varchar(150)
+  outcome text
+  notes text
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    event_date
+  }
+}
+
+Table medications {
+  medication_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  name varchar(150) [not null]
+  medication_type medication_type [not null]
+  default_unit varchar(30)
+  description text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (organization_id, name) [unique]
+  }
+}
+
+Table treatments {
+  treatment_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  medication_id uuid [not null]
+  health_event_id uuid
+  administered_at timestamp [not null]
+  dose_value decimal(10,3)
+  dose_unit varchar(30)
+  batch_number varchar(100)
+  administered_by varchar(150)
+  withdrawal_until date
+  next_due_date date
+  notes text
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    medication_id
+    administered_at
+    next_due_date
+  }
+}
+
+Table breeding_events {
+  breeding_event_id uuid [pk, default: `gen_random_uuid()`]
+  dam_id uuid [not null]
+  sire_id uuid
+  event_type breeding_event_type [not null]
+  event_date date [not null]
+  mating_method mating_method
+  pregnancy_result pregnancy_result
+  expected_birth_date date
+  actual_birth_date date
+  birth_count int
+  live_birth_count int
+  notes text
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    dam_id
+    sire_id
+    event_date
+    (dam_id, event_type, event_date)
+  }
+}
+
+Table offspring_records {
+  offspring_id uuid [pk, default: `gen_random_uuid()`]
+  breeding_event_id uuid [not null]
+  animal_id uuid [not null]
+  birth_weight_kg decimal(6,3)
+  weaning_date date
+  weaning_weight_kg decimal(6,3)
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (breeding_event_id, animal_id) [unique]
+    animal_id
+  }
+}
+
+Table animal_milestones {
+  milestone_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  milestone_type varchar(50) [not null]
+  milestone_date date
+  numeric_value decimal(10,3)
+  text_value text
+  notes text
+  created_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    (animal_id, milestone_type, milestone_date)
+  }
+
+  Note: 'Use for observations such as tooth change. Birth count should normally be derived from breeding_events.'
+}
+
+Table animal_groups {
+  group_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  name varchar(100) [not null]
+  purpose varchar(100)
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (organization_id, name) [unique]
+  }
+}
+
+Table animal_group_memberships {
+  membership_id uuid [pk, default: `gen_random_uuid()`]
+  group_id uuid [not null]
+  animal_id uuid [not null]
+  started_at date [not null]
+  ended_at date
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    group_id
+    animal_id
+    (group_id, animal_id, started_at) [unique]
+  }
+}
+
+Table feed_types {
+  feed_type_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  name varchar(100) [not null]
+  unit feed_unit [not null]
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (organization_id, name) [unique]
+  }
+}
+
+Table feed_records {
+  feed_record_id uuid [pk, default: `gen_random_uuid()`]
+  feed_type_id uuid [not null]
+  animal_id uuid
+  group_id uuid
+  fed_at timestamp [not null]
+  quantity decimal(10,3) [not null]
+  unit feed_unit [not null]
+  recorded_by uuid
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    feed_type_id
+    animal_id
+    group_id
+    fed_at
+  }
+
+  Note: 'Exactly one of animal_id or group_id should be filled.'
+}
+
+Table pasture_rotations {
+  rotation_id uuid [pk, default: `gen_random_uuid()`]
+  group_id uuid
+  location_id uuid [not null]
+  started_at date [not null]
+  ended_at date
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    group_id
+    location_id
+    started_at
+  }
+}
+
+Table location_movements {
+  movement_id uuid [pk, default: `gen_random_uuid()`]
+  animal_id uuid [not null]
+  from_location_id uuid
+  to_location_id uuid
+  movement_type movement_type [not null]
+  movement_date timestamp [not null]
+  reason text
+  destination_name varchar(150)
+  recorded_by uuid
+  notes text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    animal_id
+    from_location_id
+    to_location_id
+    movement_date
+  }
+}
+
+Table financial_records {
+  financial_record_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  animal_id uuid
+  movement_id uuid
+  transaction_type transaction_type [not null]
+  transaction_date date [not null]
+  amount decimal(14,2) [not null]
+  currency char(3) [not null, default: 'IDR']
+  description text
+  recorded_by uuid
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    animal_id
+    movement_id
+    transaction_date
+  }
+}
+
+Table sync_operations {
+  sync_operation_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  client_id varchar(100) [not null]
+  client_record_id varchar(150) [not null]
+  entity_type varchar(100) [not null]
+  entity_id uuid
+  operation_type sync_operation_type [not null]
+  payload_hash varchar(128)
+  status sync_status [not null, default: 'pending']
+  attempt_count int [not null, default: 0]
+  last_attempt_at timestamp
+  synced_at timestamp
+  error_message text
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (organization_id, client_id, client_record_id) [unique]
+    status
+    entity_type
+  }
+
+  Note: 'Idempotent sync for client-side mobile app. Retry must not create duplicate weighing records.'
+}
+
+Table audit_logs {
+  audit_id uuid [pk, default: `gen_random_uuid()`]
+  organization_id uuid [not null]
+  user_id uuid
+  entity_type varchar(100) [not null]
+  entity_id uuid
+  action audit_action [not null]
+  old_data jsonb
+  new_data jsonb
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    organization_id
+    (entity_type, entity_id)
+    created_at
+  }
+}
+
+// Core relationships
+Ref: users.organization_id > organizations.organization_id
+Ref: animals.organization_id > organizations.organization_id
+Ref: animals.created_by > users.user_id
+Ref: animals.sire_id > animals.animal_id
+Ref: animals.dam_id > animals.animal_id
+Ref: animal_tags.animal_id > animals.animal_id
+Ref: animal_photos.animal_id > animals.animal_id
+Ref: animal_photos.created_by > users.user_id
+
+Ref: devices.organization_id > organizations.organization_id
+Ref: device_calibrations.device_id > devices.device_id
+Ref: device_calibrations.calibrated_by > users.user_id
+
+Ref: weighing_sessions.device_id > devices.device_id
+Ref: weighing_sessions.animal_id > animals.animal_id
+
+Ref: weighings.session_id > weighing_sessions.session_id
+Ref: weighings.animal_id > animals.animal_id
+Ref: weighings.device_id > devices.device_id
+Ref: weighings.performed_by > users.user_id
+Ref: weighing_samples.session_id > weighing_sessions.session_id
+Ref: weighing_quality.session_id - weighing_sessions.session_id
+Ref: animal_measurements.animal_id > animals.animal_id
+Ref: animal_measurements.performed_by > users.user_id
+
+Ref: locations.organization_id > organizations.organization_id
+Ref: health_events.animal_id > animals.animal_id
+Ref: health_events.created_by > users.user_id
+Ref: medications.organization_id > organizations.organization_id
+Ref: treatments.animal_id > animals.animal_id
+Ref: treatments.medication_id > medications.medication_id
+Ref: treatments.health_event_id > health_events.health_event_id
+Ref: treatments.created_by > users.user_id
+
+Ref: breeding_events.dam_id > animals.animal_id
+Ref: breeding_events.sire_id > animals.animal_id
+Ref: breeding_events.created_by > users.user_id
+Ref: offspring_records.breeding_event_id > breeding_events.breeding_event_id
+Ref: offspring_records.animal_id > animals.animal_id
+Ref: animal_milestones.animal_id > animals.animal_id
+Ref: animal_milestones.created_by > users.user_id
+
+Ref: animal_groups.organization_id > organizations.organization_id
+Ref: animal_group_memberships.group_id > animal_groups.group_id
+Ref: animal_group_memberships.animal_id > animals.animal_id
+Ref: feed_types.organization_id > organizations.organization_id
+Ref: feed_records.feed_type_id > feed_types.feed_type_id
+Ref: feed_records.animal_id > animals.animal_id
+Ref: feed_records.group_id > animal_groups.group_id
+Ref: feed_records.recorded_by > users.user_id
+Ref: pasture_rotations.group_id > animal_groups.group_id
+Ref: pasture_rotations.location_id > locations.location_id
+
+Ref: location_movements.animal_id > animals.animal_id
+Ref: location_movements.from_location_id > locations.location_id
+Ref: location_movements.to_location_id > locations.location_id
+Ref: location_movements.recorded_by > users.user_id
+Ref: financial_records.organization_id > organizations.organization_id
+Ref: financial_records.animal_id > animals.animal_id
+Ref: financial_records.movement_id > location_movements.movement_id
+Ref: financial_records.recorded_by > users.user_id
+
+Ref: sync_operations.organization_id > organizations.organization_id
+Ref: audit_logs.organization_id > organizations.organization_id
+Ref: audit_logs.user_id > users.user_id
