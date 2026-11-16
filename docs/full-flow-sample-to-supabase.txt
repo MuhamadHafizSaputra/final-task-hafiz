@@ -40,7 +40,7 @@ Each sample needs:
 The ESP32 does not write directly to Supabase. It publishes samples to MQTT.
 
 ============================================================
-2. CREATE WEIGHING SESSION
+2. SESSION IDENTITY
 ============================================================
 
 A weighing session represents one weighing attempt.
@@ -51,10 +51,59 @@ session_id = session-001
 device_id  = scale-001
 animal_id  = goat-001
 
-The backend creates a row in weighing_sessions:
+IMPORTANT ORDERING NOTE:
+The backend cannot create a weighing_sessions row before it receives
+anything, because it has no event to react to. The ESP32 generates the
+session_id first; the backend persists the row when the first MQTT
+message carrying that session_id arrives.
 
-status = collecting
-sample_count = 0
+Temporal order:
+
+ESP32 starts attempt
+  -> ESP32 generates session_id (UUID)
+  -> ESP32 publishes first MQTT message with session_id
+  -> backend receives message
+  -> backend inserts weighing_sessions row
+  -> status = collecting, sample_count = 0
+
+Two valid implementations:
+
+Option 1 - Lazy creation (recommended):
+  Every sample payload carries session_id.
+  Backend creates the session on the first sample it sees for an
+  unknown session_id:
+
+  INSERT INTO weighing_sessions (
+      session_id, device_id, animal_id, started_at, status
+  )
+  VALUES (
+      'session-001', 'scale-001', 'goat-001',
+      '2026-11-12T10:00:00Z', 'collecting'
+  )
+  ON CONFLICT (session_id) DO NOTHING;
+
+Option 2 - Explicit start message:
+  ESP32 publishes event = "session_started" before any sample.
+  Backend creates the row when that message arrives.
+
+  {
+    "message_id": "msg-session-001",
+    "device_id": "scale-001",
+    "session_id": "session-001",
+    "animal_id": "goat-001",
+    "event": "session_started",
+    "recorded_at": "2026-11-12T10:00:00.000Z"
+  }
+
+Validation rule that follows from this:
+
+session_id unknown                        -> create it (first message)
+session_id known + status = collecting    -> accept sample
+session_id known + status = accepted,
+  rejected, or timeout                    -> reject late sample
+
+"session_id exists" must NOT be a hard requirement for the very first
+message, or the session can never be created.
 
 Main weighing_sessions columns:
 
@@ -114,11 +163,21 @@ MQTT broker is transport, not permanent storage.
 The backend subscribes to the MQTT topic and checks:
 
 - device_id is registered;
-- session_id exists and is active;
+- session_id is known, OR this is a first message for a new session
+  (then the backend creates the weighing_sessions row);
+- the session is still accepting samples (status = collecting);
 - sample_number is valid;
 - recorded_at is valid;
 - raw_weight_kg is valid;
 - message_id has not already been processed.
+
+Session resolution:
+
+session_id unknown                      -> INSERT session row
+                                           ON CONFLICT DO NOTHING
+session_id known, status = collecting   -> continue
+session_id known, status = accepted,
+  rejected, or timeout                  -> reject sample as late
 
 The backend uses session_id and sample_number for idempotency.
 
@@ -514,23 +573,24 @@ COMPLETE FLOW
 ============================================================
 
 1. ESP32 reads load-cell value.
-2. ESP32 identifies device and weighing session.
+2. ESP32 generates session_id for the attempt.
 3. ESP32 publishes timestamped raw sample to MQTT.
 4. MQTT broker routes message to backend consumer.
 5. Backend validates message and prevents duplicates.
-6. Backend inserts sample into weighing_samples.
-7. Backend updates weighing_sessions.sample_count.
-8. Backend orders samples by sample_number or source timestamp.
-9. Backend applies filtering.
-10. Backend changes session status to processing.
-11. Backend searches for stable window.
-12. Backend calculates median and quality statistics.
-13. Backend saves window summary to weighing_quality.
-14. If accepted, backend inserts final result into weighings.
-15. Backend changes session status to accepted.
-16. Supabase transaction commits.
-17. Mobile app reads finalized result.
-18. If processing fails, session becomes rejected or timeout and no weighing row is created.
+6. Backend creates the weighing_sessions row if session_id is unknown.
+7. Backend inserts sample into weighing_samples.
+8. Backend updates weighing_sessions.sample_count.
+9. Backend orders samples by sample_number or source timestamp.
+10. Backend applies filtering.
+11. Backend changes session status to processing.
+12. Backend searches for stable window.
+13. Backend calculates median and quality statistics.
+14. Backend saves window summary to weighing_quality.
+15. If accepted, backend inserts final result into weighings.
+16. Backend changes session status to accepted.
+17. Supabase transaction commits.
+18. Mobile app reads finalized result.
+19. If processing fails, session becomes rejected or timeout and no weighing row is created.
 
 Important limitation:
 
