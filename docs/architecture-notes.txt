@@ -1,5 +1,6 @@
 ARCHITECTURE NOTES — CURRENT DIRECTION
 Date: 2026-11-12
+Last Updated: 2026-11-18
 
 Current decision:
 Use Option C: MQTT/Broker real-time cloud architecture.
@@ -36,6 +37,7 @@ ESP32 -> MQTT broker -> backend consumer -> Supabase/PostgreSQL -> mobile app.
 - Internet required at ESP32 location.
 - Broker handles message delivery; database stores durable records.
 - Backend should authenticate devices, validate payloads, deduplicate messages, process measurements, and write database records.
+- Edge resilience: ESP32 temporarily buffers unsent readings in local queue if network connection drops.
 - MQTT broker is not a replacement for the database.
 - MQTT messages are not automatically permanent records unless backend consumes and stores them.
 
