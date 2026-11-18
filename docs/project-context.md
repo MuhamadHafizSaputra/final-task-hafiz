@@ -1,5 +1,7 @@
 # Project Context: IoT Goat Weighing System
 
+*Last updated: 2026-11-18*
+
 ## Working Title
 - **Indonesian:** Rancang Bangun Timbangan Kambing Berbasis IoT dengan Deteksi Bobot Stabil dan Pemrosesan Data Berbasis MQTT
 - **English:** Design and Development of an MQTT-Based IoT Goat Weighing Scale with Stable-Weight Detection
