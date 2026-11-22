@@ -1,6 +1,6 @@
 # Project Context: IoT Goat Weighing System
 
-*Last updated: 2026-11-18*
+**Capstone direction selected on 22 November 2026.** Recover missing load-cell samples from the same animal pass in the order needed to reproduce its first valid stable weight. The operator can then resolve an ID issue or arrange a physical reweigh according to the evidence. The selection, prior-art comparison, proposed title, and changes to the device contract are in the [novelty review](capstone-novelty-review.md). The 18 November scope below preserves the original proposal for comparison with Lutfi’s handoff.
 
 ## Working Title
 - **Indonesian:** Rancang Bangun Timbangan Kambing Berbasis IoT dengan Deteksi Bobot Stabil dan Pemrosesan Data Berbasis MQTT
@@ -20,7 +20,7 @@
     - Evaluation against reference scale.
 - **Out of Scope:** Marketplace dashboard and a fully tested offline-first weighing path.
 
-## Proposed Contributions (Novelty)
+## Original proposed contributions (18 November 2026)
 1. **Stable-weight detection:** Backend processing of continuous timestamped load-cell samples using a defined stable-window rule, median reporting, and re-weigh rejection. Validation against reference scale.
 2. **Data-quality layer:** Per-session quality metrics, including stability statistics and rejection reasons; kfino remains an optional post-processing comparison.
 3. **Reliable MQTT ingestion:** Idempotent MQTT sample ingestion with session boundaries, duplicate handling, ordering by source timestamp/sample number, and complete measurement audit data.
