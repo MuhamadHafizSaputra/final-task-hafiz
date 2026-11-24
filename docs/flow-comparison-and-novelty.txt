@@ -1,0 +1,205 @@
+FLOW COMPARISON AND NOVELTY POSITION
+====================================
+
+1. FLOW SUMMARIES
+------------------
+
+Amrulloh et al. (2024) — IoT-Web Integration
+
+- Platform: Automated livestock scale using IoT, Arduino Uno, RFID, and weight sensor.
+- Process: Animal enters scale -> weight appears on monitor -> data sent to database when weight is stable.
+- Stability indication: Weight no longer fluctuates drastically.
+- Communication: RESTful API using JSON through PHP/Laravel.
+- Main focus: Digital livestock investment platform and monitoring history.
+- Limitation for this project: The paper does not demonstrate RFID tag replacement, continuous identity history after replacement, offline replay, or exactly-once processing.
+
+Wardhana et al. (2026) — Interactive Mobile IoT
+
+- Hardware: Load cell, HX711, ESP32, and RFID.
+- Logic: HX711 supports load-cell measurement; the system integrates IoT data with web and mobile applications.
+- Workflow: IoT platform sends livestock data to Android and web applications through RESTful API.
+- Main focus: Interactive monitoring of Etawa crossbreed goat growth in rural farms.
+- Limitation for this project: The paper does not demonstrate RFID tag replacement, continuous identity history after replacement, offline replay, or exactly-once processing.
+
+Ratna Aisuwarya et al. (2019) — RFID Livestock Recording
+
+- Identity focus: Recording cattle identity, ownership, health, insemination, birth, and growth.
+- RFID replacement: Figure 7 presents a flow/interface for replacing a lost cattle RFID tag.
+- Hardware: RFID RC522, Arduino Uno, Bluetooth, LCD, and thermal printer.
+- Workflow: Read RFID -> record livestock data in Android application -> send data to database.
+- Important limitation: This system does NOT demonstrate automatic weighing. It does not use a load cell, automatic stable-weight detection, or automatic saving of scale weight.
+- Correct use as reference: Cite Aisuwarya for RFID-based livestock recording and RFID replacement, not for IoT automatic weighing.
+
+Gallagher TSi 2 — Commercial User Manual
+
+- Session types: ID Session, Mixed ID Session, and Non-ID Session.
+- Weighing: Animal is identified and weighed in an ID session; the system locks the weight when stable.
+- History: Animal records contain life data, traits, activities, notes, and historical trait values such as weight.
+- Hierarchy: Sessions contain animal records; animal history spans multiple weighing sessions.
+- Main focus: Commercial livestock identification, weighing, sorting, and historical recording.
+- Limitation for this project: The manual does not clearly document RFID replacement with historical remapping, delayed offline upload after replacement, or exactly-once reconciliation.
+
+2. COMPARISON WITH THIS PROJECT
+--------------------------------
+
+Feature                  This Project                         References                         Recommendation
+
+Stability detection      Backend Kalman filter + WSTD        Amrulloh: stable indication;      Keep backend processing.
+                                                              Gallagher: stable weight lock    Backend parameters can be
+                                                                                               tuned and raw data supports
+                                                                                               reproducible evaluation.
+
+Identity continuity      Permanent animal_id mapped to       Aisuwarya: RFID replacement     Strengthen. Store permanent
+                         multiple tag assignments           interface, but no weighing       animal_id and tag-assignment
+                                                                                               history.
+
+Data storage             Raw 10 SPS readings + filtered       Most references emphasize       Keep raw samples. They support
+                         values + final weight               final records or application     auditability, algorithm testing,
+                                                              records                          and thesis reproducibility.
+
+Automatic weighing       Load cell -> HX711 -> ESP32 ->      Amrulloh and Wardhana          Keep. This is separate from
+                         stable-weight algorithm -> DB       demonstrate related IoT         Aisuwarya's recording system.
+                                                              weighing/integration
+
+RFID replacement         Tag A deactivated; Tag B assigned   Aisuwarya demonstrates         Keep and extend with historical
+                         to same animal_id                    replacement interface          continuity and backend rules.
+
+Offline handling         MicroSD stores raw samples;         Public references do not        Keep, but define it as offline
+                         replay after reconnection           verify exact identity          safe storage unless result is
+                                                              reconciliation                 processed after reconnection.
+
+Delayed upload           Original animal_id preserved;       No reviewed source verifies    Make this an explicit test case.
+                         duplicate replay rejected           tag replacement during          It is stronger than a simple
+                                                              delayed upload                 tag-edit feature.
+
+Operator feedback        Buzzer/LED indicates retry or      Gallagher uses sounds and       Add controlled feedback states.
+                         accepted result                     alerts                            Do not let buzzer alone decide
+                                                                                               data validity.
+
+3. RECOMMENDED WEIGHING FLOW
+-----------------------------
+
+1. Animal enters the weighing chute.
+2. Infrared sensor detects animal presence.
+3. ESP32 starts a lintasan (animal-pass) and reads load-cell samples at 10 SPS.
+4. RFID reader scans the ear tag.
+5. ESP32 records the tag_code and session metadata.
+6. ESP32 sends raw samples through the selected transport protocol.
+7. If connectivity fails, ESP32 writes samples and metadata to microSD.
+8. Backend stores every accepted raw sample in weighing_samples.
+9. Backend applies the Kalman filter.
+10. Backend applies WSTD using a sliding window.
+11. Backend checks variance, duration, sample count, and animal-presence state.
+12. If a stable window exists, backend calculates the median stable weight.
+13. Backend stores quality metrics in weighing_quality.
+14. Backend stores one final result in weighings.
+15. Backend marks the lintasan as accepted.
+16. ESP32 receives success status when connected.
+17. ESP32 activates success buzzer/LED.
+18. Animal exits the chute.
+
+4. NO-STABLE-WINDOW LOOP
+-------------------------
+
+If no stable window is found:
+
+1. Backend does not create an accepted weighings row.
+2. Backend sends retry status when a control channel is available.
+3. ESP32 activates a retry buzzer pattern and red LED.
+4. LCD displays a clear message, for example:
+
+   Bobot belum stabil
+   Harap tenang
+
+5. System continues collecting samples while animal_present = true.
+6. Backend evaluates new windows continuously.
+7. When a valid stable window appears, normal finalization continues.
+8. When the animal exits without a valid stable window, backend closes the lintasan as rejected.
+9. The system does not loop forever after animal exit or a configured maximum duration.
+
+Important design correction:
+
+The buzzer must signal retry state. It must not directly determine weight validity.
+Backend WSTD remains the authority for stable-weight acceptance.
+
+Recommended safety limits:
+
+- Maximum weighing duration.
+- Maximum retry duration.
+- Exit detection through infrared sensor and weight threshold.
+- Retry counter.
+- Rejected status after timeout or animal exit.
+- Manual retry option from operator interface.
+
+5. NOVELTY POSITION
+--------------------
+
+The strongest contribution is not RFID alone, IoT alone, or automatic weighing alone.
+The contribution is their combined workflow with explicit identity continuity:
+
+1. Automatic IoT weighing captures repeated load-cell samples.
+2. Backend detects stable weight using Kalman filtering and WSTD.
+3. RFID links each weighing event to an individual animal profile.
+4. RFID replacement preserves the same permanent animal identity.
+5. Previous and future weights remain in one continuous animal history.
+6. Offline samples are replayed after reconnection.
+7. Delayed samples retain their original animal identity.
+8. Duplicate replay does not create duplicate weighing records.
+9. Buzzer/LED feedback requests reweighing when stability is not achieved.
+
+6. DEFENSIBLE NOVELTY STATEMENT
+--------------------------------
+
+Berdasarkan sumber publik yang ditinjau, belum ditemukan sistem peternakan domba
+atau kambing di Indonesia yang mendokumentasikan integrasi penimbangan otomatis
+berbasis IoT, pencatatan bobot berbasis RFID, penggantian RFID yang mempertahankan
+kesinambungan riwayat bobot pada profil hewan yang sama, serta rekonsiliasi data
+penimbangan luring yang tertunda dengan pencegahan duplikasi.
+
+Penelitian ini mengembangkan dan menguji alur tersebut. Klaim "pertama di Indonesia"
+tidak digunakan karena sistem tertutup atau dokumentasi yang belum tersedia tidak dapat
+dikesampingkan.
+
+7. DATABASE IDENTITY RULE
+--------------------------
+
+Use animal_id as permanent identity.
+Use tag assignments as time-bounded identifiers.
+Never resolve old offline data using only the current tag_code.
+
+Recommended weighing fields:
+
+- animal_id
+- tag_id
+- tag_code_at_capture
+- tag_assignment_id
+- captured_at
+- session_id
+- sample_number
+- message_id
+- client_record_id
+
+Recommended constraints:
+
+- UNIQUE(session_id, sample_number) for raw samples.
+- UNIQUE(device_id, session_id, sample_number) if session IDs are not globally unique.
+- UNIQUE(session_id) for one finalized weighing per lintasan.
+- Idempotency key for replayed records.
+
+8. REFERENCE USE
+-----------------
+
+- Aisuwarya et al. (2019): RFID recording and RFID replacement; not automatic weighing.
+- Amrulloh et al. (2024): IoT livestock scale, stable-weight indication, REST API, database integration.
+- Wardhana et al. (2026): Load cell, HX711, ESP32, RFID, mobile/web IoT monitoring.
+- Gallagher TSi 2 manual: commercial ID sessions, stable-weight lock, animal history, sessions, and alerts.
+
+9. FINAL RECOMMENDATION
+-----------------------
+
+Keep the backend-centered processing architecture.
+Add the retry buzzer and automatic reweigh loop.
+Set animal exit or maximum duration as loop termination conditions.
+Use Aisuwarya only for RFID replacement precedent.
+Test delayed offline upload after tag replacement as a dedicated experiment.
+Frame novelty as combined identity continuity and delayed-upload reconciliation.
