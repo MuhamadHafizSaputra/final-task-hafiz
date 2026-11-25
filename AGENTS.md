@@ -16,7 +16,7 @@
 
 ## Jenis TA: Skripsi Inovasi Produk
 
-Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Dalam kasus ini: **Sistem Penimbangan dan Pencatatan Data Kambing Berbasis IoT dengan Deteksi Bobot Stabil dan Sinkronisasi Offline-First**.
+Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Proyek ini mengembangkan sistem penimbangan dan pencatatan domba berbasis IoT dengan deteksi bobot stabil. Fokusnya adalah kesinambungan identitas domba setelah penggantian tag RFID dan rekonsiliasi data penimbangan yang terlambat diunggah. Judul dan rincian lingkup dicatat dalam `docs/project-handoff-context.md`.
 
 ---
 
@@ -182,10 +182,10 @@ Aturan berikut dirumuskan dari pola penulisan pada `examples/contoh_proposal.pdf
 ## Pedoman untuk AI Assistant (Kewajiban Model)
 
 1. **Jangan pernah mengarang sumber (hallucination):** Kutip hanya referensi yang benar-benar ada dalam `references.bib` atau yang telah divalidasi. Beri tahu pengguna jika sumber hanya dibaca pada tingkat abstrak.
-2. **Jangan asumsikan keputusan desain sebagai final:** Jika suatu keputusan (hardware, software, algoritma) terdaftar sebagai "Open Decision" di `docs/project-context.md`, perlakukan sebagai opsi, bukan ketetapan.
+2. **Jangan asumsikan keputusan desain sebagai final:** Perlakukan keputusan yang tercantum di bagian "Open decisions" pada `docs/project-handoff-context.md` sebagai opsi yang menunggu konfirmasi.
 3. **Tanyakan sebelum membuat pilihan besar:** Mintalah konfirmasi pengguna sebelum mengambil keputusan yang mengubah klaim kebaruan atau cakupan penelitian.
 4. **Validasi setiap pernyataan:** Beri label atau peringatan jika sebuah pernyataan teknis melampaui apa yang sebenarnya dilaporkan dalam makalah yang dikutip.
-5. **Konteks Proyek:** Gunakan file `docs/project-context.md` sebagai referensi utama untuk judul, latar belakang, cakupan, dan detail teknis proyek ini.
+5. **Konteks Proyek:** Gunakan `docs/project-handoff-context.md` sebagai referensi utama untuk judul, latar belakang, cakupan, dan detail teknis proyek ini.
 
 ---
 
