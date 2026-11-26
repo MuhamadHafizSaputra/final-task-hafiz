@@ -1,74 +1,137 @@
+% !TeX root = ../main.tex
 \chapter{PENDAHULUAN}
 
-\section{Latar Belakang WOI cik}
+\section{Latar Belakang}
 
-% TODO: Tulis latar belakang penelitian Anda di sini.
-% Jelaskan konteks, urgensi, dan relevansi topik yang dipilih.
-% Rujuk pada penelitian terdahulu dan data sekunder jika ada.
+Riwayat bobot setiap domba diperlukan untuk menelusuri perubahan bobot dari satu
+penimbangan ke penimbangan berikutnya. Decandia dkk.~(\citeyear{decandia2026domba})
+menggunakan timbangan otomatis dan identifikasi elektronik untuk mengikuti perubahan
+bobot individu pada domba perah. Dalam penelitian tersebut, penimbangan konvensional
+memerlukan penanganan ternak sehingga pengukuran berulang memerlukan banyak tenaga.
+Pencatatan hasil penimbangan juga memerlukan cara untuk memastikan bahwa setiap bobot
+tercatat pada profil domba yang benar.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Pencatatan manual dapat menyulitkan penyusunan riwayat bobot ketika operator perlu
+menyalin hasil timbangan dan mencocokkannya dengan identitas ternak. Pada peternakan
+kambing komunal yang diteliti Wardhana dkk.~(\citeyear{wardhana2026pemantauan}),
+operator masih menimbang dan mencatat hasil secara manual dengan prosedur yang belum
+seragam. Pada peternakan domba mitra, penelitian ini akan mengamati cara operator
+mengenali domba, mencatat hasil penimbangan, dan menemukan kembali riwayat bobotnya.
+Pengamatan tersebut akan menjadi dasar perbandingan antara alur kerja yang berjalan
+dan alur yang diusulkan.
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+Sistem berbasis \textit{Internet of Things} (IoT) dapat menghubungkan timbangan
+dengan aplikasi pencatatan. Amrulloh dkk.~(\citeyear{amrulloh2024integrasi})
+mengintegrasikan timbangan kambing dengan aplikasi web dan seluler melalui layanan
+web. Sistem tersebut mengirim hasil penimbangan ketika angka pada monitor tidak
+lagi berubah secara drastis. Wardhana dkk.~(\citeyear{wardhana2026pemantauan})
+menggunakan identifikasi frekuensi radio (\textit{radio frequency identification},
+RFID) untuk menghubungkan hasil timbangan dengan identitas kambing dan menampilkan
+riwayatnya pada aplikasi seluler.
+
+Tag RFID dapat diganti ketika tag lama hilang. Aisuwarya
+dkk.~(\citeyear{aisuwarya2019rfid}) menyediakan fungsi penggantian tag yang hilang
+pada aplikasi pencatatan sapi. Dalam sistem yang menggabungkan penggantian tag
+dengan penimbangan otomatis, kode tag yang terbaca saat penimbangan dapat berbeda
+dari kode tag aktif ketika data diterima. Sebagai contoh, timbangan dapat menyimpan
+hasil saat koneksi terputus, lalu menyelesaikan unggahan setelah operator mengganti
+tag pada profil domba yang sama. Jika server hanya mencocokkan kode tag dengan
+penugasan yang aktif saat unggahan diterima, catatan dapat kehilangan kaitannya
+dengan domba asal atau masuk ke profil yang keliru setelah tag digunakan kembali.
+
+Penelitian ini mengusulkan purwarupa timbangan domba berbasis IoT yang terhubung
+dengan aplikasi seluler untuk operator. Mikrokontroler ESP32 akan mendeteksi bobot
+stabil pada timbangan dan menyimpan data penimbangan secara lokal ketika koneksi
+terputus. Aplikasi akan mempertahankan identitas tetap pada setiap profil domba
+serta menyimpan waktu mulai dan berakhirnya setiap penugasan tag RFID. Dengan
+demikian, operator dapat mengganti tag dan menelusuri riwayat bobot pada profil
+domba yang sama.
+
+Rekonsiliasi adalah proses pemeriksaan kelengkapan data penimbangan yang diunggah
+serta pencocokan data tersebut dengan riwayat penugasan tag dan catatan yang telah
+diterima. Layanan sisi server akan memeriksa hasil ukur, waktu pengukuran, dan
+penugasan tag untuk menentukan apakah hasil dapat masuk ke riwayat bobot resmi.
+Jika unggahan penimbangan dengan tag lama selesai setelah penggantian tag,
+sistem akan menyimpan data penimbangan beserta kode tag dan waktu pengukuran
+asal untuk penelusuran. Hasil tersebut tetap berada di luar riwayat bobot resmi.
+Pengujian akan memeriksa apakah unggahan ulang data yang sama mempertahankan
+catatan yang sudah tersimpan tanpa menghasilkan entri ganda.
+
+Pengembangan purwarupa ini berkaitan dengan bidang lingkungan cerdas dalam
+draf Peta Jalan Penelitian dan Pengabdian kepada Masyarakat Departemen Ilmu
+Komputer dan Elektronika FMIPA UGM 2023--2027, yang mencakup IoT dan jaringan
+sensor \citep[hlm.~22]{dike2023petajalan}. Penelitian ini menerapkan IoT untuk
+menyalurkan data dari timbangan ke aplikasi pencatatan domba. Kontribusi yang
+diusulkan adalah pengembangan dan pengujian alur pencatatan yang menjaga
+kesinambungan identitas domba ketika tag RFID diganti dan menangani unggahan
+penimbangan yang tertunda atau berulang.
 
 \section{Rumusan Masalah}
 
-% TODO: Tulis rumusan masalah dalam bentuk pertanyaan penelitian.
-% Rumusan masalah harus spesifik, terukur, dan dapat dijawab.
-
-Berdasarkan latar belakang di atas, rumusan masalah dalam penelitian ini adalah:
-
 \begin{enumerate}
-  \item Bagaimana ...?
-  \item Bagaimana ...?
-  \item Bagaimana ...?
+  \item Bagaimana mengintegrasikan deteksi bobot stabil pada timbangan IoT
+        dengan pencatatan bobot domba, dan berapa galat terhadap timbangan
+        acuan serta proporsi percobaan yang menghasilkan bobot yang diterima?
+  \item Bagaimana menjaga agar hasil penimbangan yang memenuhi syarat sebelum
+        dan sesudah penggantian tag RFID tercatat pada profil domba yang sama?
+  \item Bagaimana merekonsiliasi unggahan sebagian, unggahan yang selesai
+        setelah penggantian tag, dan unggahan berulang agar data dapat
+        ditelusuri serta riwayat bobot resmi bebas dari salah pencatatan
+        identitas dan duplikasi pada skenario yang diuji?
 \end{enumerate}
 
 \section{Batasan Masalah}
 
-% TODO: Tulis batasan masalah untuk memfokuskan penelitian.
-% Batasan dapat mencakup ruang lingkup, teknologi, atau aspek yang tidak diteliti.
-
-Agar penelitian ini tetap fokus dan terukur, batasan masalah yang ditetapkan adalah:
-
 \begin{enumerate}
-  \item Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  \item Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+  \item Objek penelitian adalah domba. Alur penggunaan mencakup operator yang
+        menimbang domba, mengelola profil dan penugasan tag RFID, serta melihat
+        riwayat bobot melalui aplikasi seluler. Platform jual beli, alur pembeli,
+        dan transaksi merupakan pengembangan lanjutan.
+  \item Deteksi bobot stabil dilakukan pada ESP32. Lingkup pengembangan
+        perangkat lunak mencakup integrasi timbangan, penerimaan dan rekonsiliasi
+        unggahan, basis data, serta aplikasi seluler.
+  \item Saat koneksi terputus, timbangan menyimpan data setiap percobaan
+        penimbangan, yang disebut satu lintasan, secara lokal untuk diunggah
+        setelah koneksi pulih. Pemindaian tag pengganti melalui aplikasi
+        memerlukan koneksi antara timbangan dan layanan sisi server.
+  \item Hasil penimbangan dapat masuk ke riwayat resmi jika data lengkap, hasil
+        ukur valid, dan tag yang terbaca masih aktif serta memiliki tepat satu
+        penugasan yang cocok pada waktu pengukuran yang tepercaya. Lintasan
+        yang selesai diunggah setelah penugasan tag terkait berakhir tetap
+        disimpan untuk penelusuran di luar riwayat bobot resmi. Aturan
+        penyimpanan ini juga berlaku untuk lintasan dengan identitas meragukan
+        atau waktu pengukuran yang tidak tepercaya. Konfirmasi identitas melalui
+        aplikasi merupakan pengembangan lanjutan.
+  \item Pengujian bobot menggunakan timbangan acuan. Skenario pengujian
+        mencakup pembacaan yang tidak stabil dan pembacaan yang tampak stabil
+        ketika domba belum sepenuhnya berada di atas platform. Pengujian pencatatan
+        meliputi penggantian tag, konflik penugasan tag, waktu pengukuran yang
+        meragukan, unggahan sebagian, dan pengiriman ulang.
 \end{enumerate}
 
 \section{Tujuan Penelitian}
 
-% TODO: Tulis tujuan penelitian yang ingin dicapai.
-% Tujuan harus sesuai dengan rumusan masalah.
-
-Tujuan dari penelitian ini adalah:
-
 \begin{enumerate}
-  \item Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  \item Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+  \item Mengembangkan integrasi timbangan IoT dan aplikasi pencatatan domba
+        dengan deteksi bobot stabil pada ESP32, serta mengukur galat terhadap
+        timbangan acuan dan proporsi percobaan yang menghasilkan bobot yang
+        diterima.
+  \item Mengembangkan pencatatan profil dengan identitas domba tetap dan riwayat
+        penugasan tag RFID, serta memeriksa ketepatan profil untuk bobot yang
+        dicatat sebelum dan sesudah penggantian tag.
+  \item Mengembangkan dan menguji rekonsiliasi unggahan sebagian, tertunda, dan
+        berulang dengan memeriksa kelengkapan data yang tersimpan, ketepatan
+        pemasukan hasil ke riwayat resmi, dan jumlah catatan bobot ganda.
 \end{enumerate}
 
 \section{Manfaat Penelitian}
 
-% TODO: Tulis manfaat penelitian bagi akademik dan praktis.
-
-Penelitian ini diharapkan memberikan manfaat berikut:
-
 \begin{enumerate}
-  \item \textbf{Teoritis:} Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item \textbf{Praktis:} Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  \item \textbf{Manfaat akademik.} Rancangan dan hasil pengujian diharapkan
+        dapat menjadi acuan untuk mengevaluasi kesinambungan identitas ternak
+        dan rekonsiliasi data ketika perangkat IoT mengunggah hasil setelah
+        koneksi pulih.
+  \item \textbf{Manfaat praktis.} Purwarupa diharapkan dapat membantu operator
+        mengurangi penyalinan manual hasil timbangan dan menelusuri riwayat bobot
+        domba pada profil yang sama setelah penggantian tag RFID.
 \end{enumerate}
-
-\section{Sistematika Penulisan}
-
-% TODO: Sesuaikan sistematika penulisan dengan struktur penelitian Anda.
-
-Sistematika penulisan proposal tugas akhir ini adalah sebagai berikut:
-
-\begin{itemize}
-  \item \textbf{Bab I:} Pendahuluan --- berisi latar belakang, rumusan masalah, batasan masalah, tujuan, manfaat, dan sistematika penulisan.
-  \item \textbf{Bab II:} Penelitian Terkait --- membahas state of the art dan hasil-hasil penelitian sebelumnya yang relevan.
-  \item \textbf{Bab III:} Metode dan Rancangan Penelitian --- menjelaskan metodologi, perancangan sistem, bagan alir, dan tahapan implementasi.
-  \item \textbf{Bab IV:} Jadwal Penelitian --- memuat Gantt Chart berbasis bulan untuk perencanaan waktu penelitian.
-\end{itemize}
