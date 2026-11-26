@@ -14,7 +14,7 @@ Sheep (domba) is the target species for the product and evaluation. Final Indone
 
 | Owner | Responsibilities |
 |---|---|
-| Hafiz | Define the backend upload contract, implement ingestion and reconciliation, and develop the database, mobile app, identity correction, results and status UI, and software evaluation. Website work belongs to Hafiz, with scope still open. |
+| Hafiz | Define the backend upload and scan-request contracts. Implement ingestion and reconciliation, the database, the mobile app, and software evaluation. Website work belongs to Hafiz, with scope still open. |
 | Lutfi | Weighing platform, ESP32 acquisition, on-device filtering and stable-weight detection, RFID, presence sensing, local storage, LCD, and firmware. |
 | Both | Agree on device messages, transport, database boundaries, replay behavior, operator feedback, and integration tests. |
 
@@ -24,9 +24,11 @@ Hafiz's software plan uses Expo/React Native, a Next.js backend/API, and Supabas
 
 ## Weighing and recording workflow
 
+The current tldraw board has five pages. Pages 01 and 02 show the end-to-end flow and ESP32 weighing loop. Page 03 covers device-to-backend uploads. Page 04 covers RFID assignment and sheep history. Page 05 covers the shared RFID scan and connection checks. The [local diagrams.net copy](sheep-weighing-flow.drawio) contains the first four flows.
+
 1. The operator starts a batch (**sesi**). When a sheep enters the platform, the ESP32 scans its RFID tag. A missing or ambiguous read loops back to scanning. A confirmed tag starts the weighing pass (**lintasan**). The device uses infrared and a weight threshold for presence. Full platform occupancy remains a separate stability requirement to validate.
 2. After the successful RFID read, the ESP32 starts numbering and timestamping weighing samples at 10 samples/s, buffers the pass on microSD, and displays live weight. The ESP32 filters samples and checks successive windows while the sheep is on the platform.
-3. **Temporary values for the flow diagram:** Use a 2 s stability window (20 consecutive samples) and a 10 s retry interval. If no window qualifies by the end of an interval, notify the operator with the buzzer or indicator LEDs and automatically keep sampling within the same pass. Keep the sample sequence and raw readings across retries. Validate these timings on the scale before fixing them. The filter and stability threshold remain open.
+3. **Provisional timing.** Check each new rolling 2 s window (20 consecutive samples) as samples arrive. If the weight remains unstable for 10 s, notify the operator with the buzzer or indicator LEDs and restart the alert timer. Sampling and stability checks continue throughout in the same pass. Validate the timings on the scale. The filter and stability threshold remain open.
 4. A qualifying stable window is the sole end condition for the current ESP32 flow. Keep the pass active and continue checking new windows until one qualifies. Then show the final local weight, signal acceptance, and queue the completed pass for upload.
 5. After reconnection, replay the full buffered pass and deduplicate by pass ID and sample number. Retain all received raw samples and pass outcomes for the thesis evaluation, including rejected and timed-out attempts. For this prototype, the backend adds an official weight only when the measurement is valid and the currently active tag has one matching assignment at capture time. Store passes with a replaced tag, ambiguous identity, or unreliable capture time without publishing a weight. Identity confirmation in the app is deferred.
 
@@ -34,24 +36,37 @@ Hafiz's software plan uses Expo/React Native, a Next.js backend/API, and Supabas
 
 Keep a permanent animal ID and a dated history of RFID tag assignments. Any signed-in app user with access to the sheep's profile can record a replacement. Record who made the change and when, and check that the new tag is available for assignment.
 
-**New-tag scan.** From the sheep's profile, the operator selects a scale and taps *Pindai tag baru*. The backend creates an expiring scan request for that ESP32. The ESP32 checks for the request over HTTPS and enters tag-scan mode when idle. In this mode it reads one tag and returns its ID with the scan request ID without starting a weighing pass. The backend makes the result available to the app, which displays the scanned ID. On *Simpan*, the backend rechecks tag availability and updates the old and new assignments together. If the scan expires or is cancelled, the profile is unchanged and the scale returns to its normal weighing mode. The exact request timing and endpoint design remain open.
+### First tag and replacement
 
-A tag can be reused once its active assignment has ended. For a sold sheep, record when its tag was detached and keep the historical assignment. Before attaching the tag to another sheep, check that it has no active assignment. Hold delayed uploads from the old assignment outside official weight history so they cannot be attributed to the new sheep.
+Open or create the sheep profile, then choose *Pasang tag pertama* or *Ganti tag RFID*. Both actions use *Pindai tag baru* (Alur 05). After the app displays the scanned ID, *Simpan* asks the backend to recheck that the tag has no active assignment to another sheep. For a first tag, the backend creates the assignment. For a replacement, it ends the old assignment and starts the new one together on the same profile. Neither operation requires a weighing pass.
+
+### Scan request and connection feedback
+
+1. When the operator taps *Pindai tag baru*, the app displays *Memeriksa koneksi timbangan*. The backend creates an expiring request for the selected ESP32, which checks for requests over HTTPS.
+2. If the ESP32 is idle, it enters scan mode and replies *Siap* for that request. The app then displays *Timbangan terhubung* and asks the operator to bring the tag near the reader. If the ESP32 reports it is weighing, the app shows that it is busy and asks the operator to try again afterward. If no response arrives before the request expires, the app shows *Timbangan belum merespons* and offers *Coba lagi*.
+3. The ESP32 reads one tag ID without starting a weighing pass and returns the tag ID and scan request ID. The backend delivers the result to the matching app request. The app displays the tag ID before the operator saves it.
+4. Weighing is the ESP32's default mode. It returns to that mode after the tag read, after it receives a cancellation, or after its local scan timeout. A cancelled or expired scan leaves the profile unchanged. The request timeout, polling interval, and endpoints remain open.
+
+A tag can be reused once its active assignment has ended. If the tag is recovered from a sold sheep, open that sheep's profile and record its removal with *Lepas tag RFID*. Keep the historical assignment and its end time. Hold delayed uploads from that assignment outside official weight history so they cannot be attributed to the new sheep.
+
+### Delayed-upload test
+
+This test covers a pass that is already queued when a tag is replaced. It is separate from normal first-time assignment and replacement.
 
 1. The ESP32 captures a valid weighing under tag A and buffers the pass during an outage.
-2. In the app, the farmer scans tag B with the ESP32 reader and saves it on the same sheep profile. The backend closes the assignment for A and records the start of the assignment for B.
-3. The old pass uploads with the original tag A and capture time. The backend preserves the old tag, the original capture time, and the stored pass for later reconciliation.
+2. The ESP32 reconnects and reports that it is ready to scan. For this test case, the old pass is still queued or its upload is incomplete when the farmer scans tag B and saves it on the same sheep profile. The backend closes the assignment for A and records the start of the assignment for B.
+3. The old pass finishes uploading after tag B is saved. It retains the original tag A and capture time. The backend preserves the pass and its evidence for later reconciliation. If the old pass uploads and is recorded before tag B is saved, it follows the normal active-tag flow.
 4. The old pass stays out of official weight history in the current prototype. The farmer confirmation workflow is deferred. Replaying an identical upload preserves the stored pass.
 
 ## Backend upload contract
 
 Hafiz defines the ingestion contract and Lutfi implements it on the ESP32. Use a stable pass ID and numbered samples. The proposed payload includes the device and batch IDs, original RFID tag, capture time and clock status, sample bounds and raw readings, local acceptance or reweigh outcome, and the selected window, result, and rule version when available.
 
-The ESP32 keeps the buffered copy until the backend acknowledges that it has durably stored the complete pass and its samples. This acknowledgement can arrive even when the pass is stored without an official weight. The backend treats identical retries as the same pass and flags conflicting contents for review.
+The backend checks completeness and consistency before acknowledging durable storage. An incomplete upload stays pending and is retried. A conflicting pass ID or payload is held for inspection, with the original ESP32 copy retained. An identical retry uses the existing record. The ESP32 can clear its microSD copy after the durable acknowledgement, even if the stored pass has no official weight. An official weight is written at most once for each eligible pass.
 
 ## Thesis contribution and evaluation
 
-**The thesis combines IoT weighing with a sheep recording system.** Evaluate the full path from a sheep's RFID scan and local weighing through its saved profile and weight history. The delayed-upload test checks that a valid weighing captured under an old tag still reaches the same profile after replacement. A permanent animal ID ties together weights and tag assignments. Replaying the same pass should produce at most one official weighing. [Validation plan](capstone-todo.md) · [Flow comparison](flow-comparison-and-novelty.txt) · [Editable workflow diagrams](sheep-weighing-flow.drawio)
+**The thesis combines IoT weighing with a sheep recording system.** Evaluate the full path from a sheep's RFID scan and local weighing through its saved profile and weight history. The delayed-upload test checks that an old-tag pass and its original evidence are retained without posting the weight to the wrong profile. A permanent animal ID ties together weights and tag assignments. Replaying the same pass should produce at most one official weighing. [Validation plan](capstone-todo.md) · [Flow comparison](flow-comparison-and-novelty.txt)
 
 - **Primary evaluation:** Compare the prototype with the farm's current identification and recording workflow. Capture a pass on the old tag, replace the tag, record a pass on the new tag, then upload and replay the old pass. Verify that the new-tag weight reaches the existing sheep profile, the delayed old-tag pass is retained without creating an official weight, and replay creates no duplicate record. Include uncertain capture times, partial uploads, duplicate retries, and conflicting tag assignments in integration tests.
 - **Weighing evaluation:** Use a reference scale to measure weighing error and report how many passes yielded an accepted weight. Include unstable passes and steady readings from partial platform loading. Use the same calibration, filter settings, sample order, stability rule, and rounding when comparing interrupted and complete records.
