@@ -1,59 +1,171 @@
 \chapter{PENELITIAN TERKAIT}
 
-\section{State of the Art Teknologi Pemantauan dan Pemasaran Ternak Berbasis IoT}
+\section{\textit{State of the Art} Teknologi Pencatatan dan Penimbangan Domba}
 
-Pemanfaatan Internet of Things (IoT) pada sektor peternakan terus berkembang dari pencatatan manual menuju pengumpulan data otomatis yang terhubung dengan sistem informasi. Farooq dkk. (2022) memetakan peran IoT dalam pertanian untuk mewujudkan lingkungan peternakan cerdas (\textit{smart livestock}). Pada tingkat implementasi, sejumlah penelitian menjadikan bobot badan sebagai parameter utama pemantauan (Kushartadi dkk., 2023; Efendi dkk., 2025; Sumiharto dan Malik, 2026). Perubahan bobot dari waktu ke waktu menggambarkan laju pertumbuhan hewan, sehingga data yang tercatat secara berkala dapat menjadi dasar pengambilan keputusan pemeliharaan (Efendi dkk., 2025).
+%it should be "pemberian jenis pakan" cause the ones gonna be recorded is the type of food
+Riwayat seekor domba terbentuk dari dua jenis catatan. Operator menyimpan catatan pemeliharaan, seperti jenis pakan yang diberikan atau
+tanggal kelahiran anak domba, sedangkan timbangan menghasilkan
+pengukuran pada waktu tertentu. Kedua catatan baru dapat dibaca bersama apabila
+aplikasi menghubungkannya dengan individu yang tepat. Penelitian mengenai aplikasi
+pencatatan, timbangan terhubung, dan identifikasi elektronik memberikan dasar untuk
+menelaah bagaimana hubungan itu dibentuk dan dipertahankan.
 
-Kushartadi dkk. (2023) merancang sistem pemantauan ternak yang memadukan pengukur bobot cerdas dengan penanda Bluetooth Low Energy (BLE) yang dikenakan pada hewan sebagai identitas. Data bobot dan kesehatan dikirim ke sistem awan. Sistem tersebut dibangun dengan mikrokontroler ESP32, sensor beban (\textit{load cell}), BLE, dan protokol Message Queuing Telemetry Transport (MQTT), sehingga pemantauan dapat dilakukan secara waktu nyata dan jarak jauh. Susunan perangkat keras serupa digunakan oleh Sumiharto dan Malik (2026) di Universitas Gadjah Mada, yaitu perangkat berbasis ESP32 yang membaca identitas ternak melalui RFID dan bobot melalui \textit{load cell}. Data dikirim dalam format JSON ke peladen untuk divalidasi sebelum disimpan pada basis data PostgreSQL yang dikelola melalui Supabase.
+Aisuwarya dkk.~(\citeyear{aisuwarya2019rfid}) menunjukkan cara menyusun riwayat ternak
+berdasarkan individu melalui aplikasi Android untuk sapi. Operator dapat membuka data
+sapi yang dikenali melalui identifikasi frekuensi radio (\textit{radio frequency
+identification}, RFID) serta mencatat kesehatan, inseminasi, kelahiran, dan
+pertumbuhan. Dengan susunan ini, satu pemindaian memberi operator akses ke beberapa
+jenis catatan. Contoh tersebut relevan bagi profil domba karena catatan reproduksi
+atau kesehatan tetap diperlukan meskipun pada hari itu operator tidak melakukan
+penimbangan.
 
-Penelitian Sumiharto dan Malik (2026) juga menunjukkan bahwa keandalan sistem tidak hanya ditentukan oleh perangkat keras. Mereka menerapkan aplikasi \textit{full-stack} Next.js dengan Supabase Auth dan kebijakan Row Level Security (RLS) untuk membatasi akses data berdasarkan kepemilikan pengguna. Setiap data yang masuk melalui verifikasi kunci API, validasi struktur data, dan pemeriksaan status perangkat. Pengujian beban pada rentang 40 hingga 95 permintaan per detik menunjukkan bahwa sistem stabil hingga 90 permintaan per detik tanpa temuan kerentanan tingkat tinggi. Dari sisi pemanfaatan data, Efendi dkk. (2025) mengumpulkan bobot mingguan 15 ekor domba selama enam bulan menggunakan Arduino dan ESP32. Pertumbuhan setiap hewan kemudian dimodelkan dengan regresi linear sederhana, yang menghasilkan nilai $R^2$ di atas 99\% pada sebagian besar ternak. Hasil tersebut disajikan melalui antarmuka telepon pintar.
+Wardhana dkk.~(\citeyear{wardhana2026pemantauan}) menghubungkan timbangan berbasis
+\textit{Internet of Things} (IoT) dengan aplikasi seluler untuk memantau pertumbuhan
+kambing peranakan etawa. Aplikasi tersebut juga memuat riwayat pakan dan kesehatan.
+Pada pengujian yang dilaporkan, seluruh 20 catatan pemantauan berhasil dikirim dan
+penilaian pengguna dengan \textit{System Usability Scale} (SUS) menghasilkan skor
+rata-rata 83,5. Angka pertama menerangkan keberhasilan pengiriman dalam pengujian
+tersebut, sedangkan angka kedua menggambarkan penilaian pengguna terhadap aplikasi.
+Keduanya belum menjawab apa yang akan terlihat pada profil ternak apabila tag berubah
+ketika data masih mengantre.
 
-Di Indonesia, sistem serupa telah diterapkan pada ternak kambing. Amrulloh dkk. (2024) mengembangkan timbangan kambing berbasis IoT yang terdiri atas mikrokontroler Arduino Uno, sensor berat, dan sensor RFID untuk mengirimkan identitas serta bobot ternak ke basis data melalui API RESTful. Data tersebut ditampilkan pada aplikasi web berbasis Laravel dan aplikasi seluler berbasis React Native untuk memantau perkembangan ternak di Desa Dermaji, Kabupaten Banyumas. Menurut penelitian tersebut, data bobot dikirim ketika angka pada monitor timbangan tidak lagi berubah secara drastis, yang dianggap menandakan posisi kambing sudah stabil. Sholicha dkk. (2023) merancang aplikasi Smart Goat untuk pencatatan ternak pada program penggemukan kambing. Aplikasi tersebut dilengkapi sensor RFID, timbangan digital, serta pemantauan suhu, kelembapan, intensitas cahaya, dan gas amonia pada kandang.
+Amrulloh dkk.~(\citeyear{amrulloh2024integrasi}) memperlihatkan bagaimana kode RFID
+dan bobot kambing dapat diteruskan melalui layanan web ke aplikasi web dan seluler.
+Pada sistem itu, perubahan angka yang tidak lagi drastis pada monitor menjadi indikasi
+bahwa bobot sudah stabil dan dapat dikirim. Kajian tersebut menjelaskan perjalanan
+data dari timbangan sampai ke aplikasi, tetapi pengujian fungsional yang dilaporkan
+tidak membandingkan hasil ukur dengan timbangan acuan. Bagi penelitian ini, pengujian
+perlu membedakan keabsahan bobot yang dihasilkan perangkat dari ketepatan profil
+tempat bobot itu dicatat.
 
-Kebutuhan terhadap alat semacam ini muncul karena penimbangan langsung sering dianggap merepotkan. Amrulloh dkk. (2024), dengan merujuk penelitian sebelumnya, menyebutkan bahwa pengukuran bobot kambing di sebagian peternakan masih dilakukan dengan mengangkat kambing ke atas timbangan gantung menggunakan karung. Sebagai alternatif, penduga bobot berbasis citra juga dikembangkan. Shuvo dkk. (2026) membangun aplikasi web progresif (\textit{Progressive Web App}, PWA) yang dapat berjalan secara luring dan menduga bobot sapi dari foto serta ukuran tubuh. Penelitian tersebut melaporkan galat absolut rata-rata (\textit{Mean Absolute Error}, MAE) sebesar 7,52 kg pada lima ekor sapi uji dengan bobot 213--412 kg. Timbangan elektronik bersertifikat dengan ketelitian $\pm 0{,}5$ kg tetap digunakan sebagai acuan. Kulesz (2026) juga melaporkan PWA untuk peternak kambing dengan fitur penilaian bobot berbasis foto yang berjalan sepenuhnya luring. Temuan ini menunjukkan bahwa timbangan tetap diperlukan sebagai acuan pengukuran langsung.
+Pada domba, Decandia dkk.~(\citeyear{decandia2026domba}) menggunakan timbangan
+lintasan (\textit{walk-over weighing}) untuk mengikuti perubahan bobot induk domba
+Sarda. Antena mengenali individu melalui bolus elektronik yang ditempatkan di rumen.
+Dalam percobaan di kandang dan di padang penggembalaan, rangkaian pengukuran
+memperlihatkan perbedaan perubahan bobot antarperlakuan nutrisi. Temuan ini
+menjelaskan nilai pengukuran berulang pada individu yang sama. Jenis pengenal dan
+tujuan pengujiannya berbeda dari sistem bertag telinga, sehingga hasil tersebut belum
+menerangkan kesinambungan riwayat ketika operator mengganti tag.
 
-Data bobot yang akurat memiliki nilai ekonomi langsung dalam transaksi. Rianto dkk. (2026) menelaah 90 ekor kambing kurban di Kabupaten Semarang dan menemukan korelasi sangat kuat antara harga per ekor dan bobot badan ($r = 0{,}848$). Bobot menjelaskan 71,89\% variasi harga, sedangkan setiap kenaikan 1 kg bobot berkaitan dengan kenaikan harga sekitar Rp79.565 per ekor pada sampel tersebut. Angka ini merupakan hasil pada sampel penelitian dan tidak boleh digeneralisasi ke seluruh pasar tanpa pengujian tambahan. Meskipun demikian, penimbangan tidak selalu dilakukan. Rianto dkk. (2026) menduga bobot dari lingkar dada dan panjang badan pada hewan yang tidak dapat ditimbang. Septyan dkk. (2023) menyebutkan bahwa penjualan sapi potong di Indonesia umumnya masih mengandalkan taksiran penampilan badan. Pada sapi Bali, rumus pendugaan Djagra dan Lambourne yang telah diuji masih menyimpang sekitar 8,5\% hingga 8,7\% dari hasil timbangan digital.
+Catatan bobot bertanggal juga dapat memberi peternak dasar untuk menjelaskan kondisi
+seekor domba kepada calon pembeli, sebagaimana disampaikan peternak mitra pada
+pembahasan di Bab~I. Dalam survei terhadap 31 responden pada segmen domba potong
+harian di Kabupaten Garut, Firdausa dkk.~(\citeyear{firdausa2026preferensi}) menemukan
+preferensi terhadap domba dengan bobot 25--35~kg. Temuan ini memberi alasan praktis
+untuk menampilkan bobot bersama tanggal pengukurannya. Pengaruh catatan tersebut
+terhadap harga jual atau kepercayaan pembeli masih memerlukan pengujian tersendiri.
 
-Dari sisi pemasaran, platform digital untuk jual beli kambing telah dikembangkan di Indonesia. Waluyo dkk. (2018) membangun aplikasi \textit{m-commerce} berbasis Android sebagai media informasi dan penjualan kambing yang mempertemukan pembeli dengan peternak. Penelitian tersebut dilatarbelakangi oleh keterbatasan waktu operasional pasar hewan, peran perantara, dan biaya operasional yang dapat meningkatkan harga di tingkat pembeli. Oktaviani dkk. (2023) merancang \textit{e-marketplace} bagi kelompok ternak kambing yang melayani jual beli, lelang, dan bagi hasil ternak. Penelitian tersebut berangkat dari harga jual hasil ternak yang berada di bawah harga pasar. Dengan demikian, teknologi pengukuran otomatis, pengelolaan data berbasis awan, dan platform pemasaran digital telah berkembang, tetapi umumnya dikembangkan secara terpisah. Keterkaitan ketiganya dan celah penelitian diuraikan pada subbab berikutnya.
+Keberlangsungan riwayat individu perlu memperhitungkan kemungkinan hilangnya penanda
+fisik. Pada anak domba Akkaraman di Turki, Karakus dkk.~(\citeyear{karakus2015tag})
+melaporkan bahwa empat dari 380 tag telinga elektronik hilang dalam tujuh bulan
+pertama setelah pemasangan. Angka tersebut berlaku untuk kelompok dan kondisi
+pemeliharaan yang mereka amati. Ketika tag hilang, operator perlu mengenali domba
+dan memilih profilnya sebelum menautkan tag pengganti. Setelah itu, pemindaian tag
+baru semestinya membuka catatan kesehatan dan hasil timbang yang sudah ada.
 
 \section{Tinjauan Penelitian Terdahulu}
 
-Penelitian terdahulu yang berkaitan dengan topik ini dapat dikelompokkan ke dalam tiga kelompok. Kelompok pertama adalah sistem timbangan ternak berbasis IoT yang terhubung dengan platform pemantauan. Kelompok kedua adalah aplikasi pencatatan ternak yang memanfaatkan timbangan sebagai salah satu sumber data. Kelompok ketiga adalah penduga bobot ternak tanpa timbangan, misalnya berbasis citra. Pemahaman mengenai capaian dan batasan masing-masing kelompok diperlukan untuk menentukan posisi penelitian ini. Perbandingan penelitian terdahulu dengan penelitian yang diusulkan dirangkum pada Tabel~\ref{tab:penelitian-terdahulu}.
+Tabel~\ref{tab:penelitian-terdahulu} membandingkan penelitian berdasarkan jenis data
+yang dicatat, hasil yang diperlihatkan, serta persoalan yang masih perlu diuji pada
+aplikasi domba. Studi pada kambing dan sapi digunakan untuk menelaah alur perangkat
+lunak, sedangkan studi pada domba memberikan bukti yang sesuai dengan objek ternak
+penelitian. Satu penelitian sistem terdistribusi disertakan untuk menjelaskan perilaku
+penyimpanan ketika perangkat mengirim permintaan yang sama lebih dari sekali.
 
-\begin{table}[H]
-  \centering
-  \caption{Perbandingan penelitian terdahulu dan penelitian yang diusulkan}
-  \label{tab:penelitian-terdahulu}
-  \small
-  \begin{tabularx}{\textwidth}{p{0.20\textwidth} p{0.23\textwidth} X X}
-    \toprule
-    \textbf{Peneliti (Tahun)} & \textbf{Fokus penelitian} & \textbf{Keunggulan sistem} & \textbf{Batasan atau kekurangan} \\
-    \midrule
-    Amrulloh dkk. (2024) & Timbangan kambing IoT (Arduino Uno, sensor berat, RFID) dengan aplikasi web Laravel dan aplikasi seluler React Native. & Tiga platform terintegrasi melalui API RESTful; data bobot dikirim saat angka dianggap stabil. & Pengujian terbatas pada fungsionalitas \textit{black-box}; akurasi terhadap timbangan acuan belum diuji; kriteria stabil bersifat kualitatif. \\
-    Sholicha dkk. (2023) & Aplikasi Smart Goat untuk pencatatan ternak pada program penggemukan kambing. & Manajemen data ternak, pemantauan bobot, dan pemantauan kondisi kandang dengan RFID serta timbangan digital. & Berfokus pada pencatatan dan pemantauan kandang; evaluasi akurasi terhadap timbangan acuan belum dilaporkan. \\
-    Kushartadi dkk. (2023) & Pemantauan ternak waktu nyata dengan pengukur bobot cerdas, BLE, ESP32, \textit{load cell}, dan MQTT. & Data bobot dan kesehatan dikirim ke awan serta dapat dipantau jarak jauh. & Tidak membahas penanganan hewan yang bergerak saat penimbangan. \\
-    Sumiharto dan Malik (2026) & Sistem pemantauan bobot ternak berbasis web dengan timbangan IoT, Next.js, dan Supabase. & Arsitektur web--awan--IoT dengan kontrol akses RLS; stabil hingga 90 permintaan per detik pada pengujian yang dilaporkan. & Pengujian menitikberatkan kinerja dan keamanan sistem; sistem berbasis web. \\
-    Rahayu dkk. (2023) & Sistem penimbangan ternak berbasis IoT untuk marketplace Caribi pada skema investasi ternak Maro. & Membaca RFID, menimbang ternak, dan mengirim bobot ke peladen. & Berorientasi pada skema investasi bagi hasil, bukan kualitas data penimbangan. \\
-    Shuvo dkk. (2026) & PWA luring untuk menduga bobot sapi dari citra dan ukuran tubuh. & Berjalan tanpa internet; menyediakan skor kepercayaan dan uji kebergunaan. & Berupa pendugaan, bukan pengukuran langsung; objeknya sapi pada fasilitas dengan jumlah hewan uji terbatas. \\
-    Penelitian ini & Timbangan IoT berpalang pintu (\textit{gated}) dan aplikasi untuk pengumpulan data kambing. & Deteksi bobot stabil yang divalidasi terhadap timbangan acuan, skor kualitas tiap penimbangan, serta jalur data \textit{offline-first} yang diuji. & Diisi sesuai batasan produk pada Bab I. \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+Penggantian tag telah muncul dalam aplikasi pencatatan ternak. Gambar~7 pada Aisuwarya
+dkk.~(\citeyear{aisuwarya2019rfid}) memperlihatkan antarmuka untuk mengganti tag RFID
+sapi yang hilang. Sementara itu, Amrulloh dkk.~(\citeyear{amrulloh2024integrasi}) dan
+Wardhana dkk.~(\citeyear{wardhana2026pemantauan}) memperlihatkan pengiriman hasil
+timbang yang terkait dengan identitas ternak. Jika kedua alur ini digunakan bersama,
+mengganti kode pada profil saja menyisakan persoalan. Sebuah timbangan masih dapat
+membawa hasil pengukuran dengan kode lama ketika operator sudah menggunakan kode baru.
 
-Berdasarkan Tabel~\ref{tab:penelitian-terdahulu}, kelompok sistem timbangan IoT telah menunjukkan bahwa bobot ternak dapat dikumpulkan secara otomatis dan dikirim ke aplikasi. Meskipun demikian, pengujian pada penelitian tersebut cenderung diarahkan pada fungsi dan kinerja sistem. Amrulloh dkk. (2024), misalnya, menguji fungsionalitas dengan pengujian \textit{black-box} dan menetapkan kondisi stabil berdasarkan perubahan angka pada monitor tanpa kriteria kuantitatif yang dapat direplikasi. Sumiharto dan Malik (2026) menguji beban dan keamanan sistem. Keduanya belum menguji seberapa dekat bobot yang dikirim timbangan dengan timbangan acuan pada hewan hidup yang bergerak.
+Selang antara pencatatan dan penerimaan data juga ditemui pada aplikasi peternakan.
+Savoia dkk.~(\citeyear{savoia2023dtreo}) menjelaskan bahwa Dtreo dapat mencatat data
+per individu ketika tersambung maupun luring. Dalam program pembibitan kambing di
+India, petugas mengumpulkan data melalui tablet atau telepon saat berada di desa.
+Mekanisme ini memperlihatkan bahwa waktu pencatatan di lapangan dapat berbeda dari
+waktu data tersedia di pusat. Pada timbangan, perbedaan kedua waktu itu menentukan
+riwayat penugasan tag mana yang perlu diperiksa ketika hasil ukur diterima.
 
-Penelitian Smart Goat (Sholicha dkk., 2023) dan sistem pada platform investasi (Amrulloh dkk., 2024; Rahayu dkk., 2023) menempatkan timbangan sebagai salah satu sumber data bagi aplikasi yang tujuan utamanya adalah pencatatan atau investasi. Kualitas pembacaan timbangan itu sendiri belum menjadi objek utama penelitian.
+Koneksi yang terputus juga dapat membuat perangkat mengirim ulang data yang sebenarnya
+telah diterima. Lee dkk.~(\citeyear{lee2015rifl}) membahas situasi ketika layanan
+sudah menjalankan operasi, tetapi pemanggil belum menerima balasan. Mekanisme yang
+mereka uji pada RAMCloud menggunakan pengenal permintaan yang tetap saat dicoba ulang
+dan menyimpan catatan penyelesaian bersama perubahan data. Prinsip yang relevan bagi
+timbangan adalah mengenali kejadian yang sama saat pesannya tiba kembali. Dua
+penimbangan berbeda dapat menghasilkan bobot yang sama, sehingga nilai bobot saja
+tidak cukup untuk mengenali kiriman ulang.
 
-Kelompok ketiga menggunakan prinsip pengukuran yang berbeda. Shuvo dkk. (2026) dan Kulesz (2026) menunjukkan bahwa PWA luring dapat dijalankan di lapangan untuk pendugaan bobot dari foto. Akan tetapi, pendugaan tersebut diuji pada objek dan jumlah hewan yang terbatas, dan penelitian Shuvo dkk. (2026) tetap membandingkan hasilnya dengan timbangan elektronik. Hal ini memperkuat posisi timbangan sebagai acuan yang masih perlu dibuat andal pada kambing. Perbedaan tersebut membentuk celah penelitian yang diuraikan pada subbab berikutnya.
+\begingroup
+\footnotesize\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{.20\linewidth}>{\raggedright\arraybackslash}p{.155\linewidth}>{\raggedright\arraybackslash}p{.18\linewidth}>{\raggedright\arraybackslash}p{.17\linewidth}>{\raggedright\arraybackslash}p{.245\linewidth}@{}}
+\caption{Perbandingan Penelitian Terdahulu dan Penelitian yang Diusulkan}\label{tab:penelitian-terdahulu}\\
+\toprule
+\textbf{Penelitian} & \textbf{Fokus Penelitian} & \textbf{Pendekatan} & \textbf{Aspek yang Dipertim\-bangkan} & \textbf{Batasan/ Relevansi terhadap Penelitian} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Penelitian} & \textbf{Fokus Penelitian} & \textbf{Pendekatan} & \textbf{Aspek yang Dipertim\-bangkan} & \textbf{Batasan/ Relevansi terhadap Penelitian} \\
+\midrule\endhead
+\midrule\endfoot
+\bottomrule\endlastfoot
+Aisuwarya dkk.~(\citeyear{aisuwarya2019rfid})\newline \textit{Implementasi Teknologi RFID (Radio Frequency Identification) untuk Recording Data Ternak Sapi} & Riwayat individu sapi & Aplikasi Android dan pemindaian RFID & Identitas, kesehatan, reproduksi, pertumbuhan & Memuat penggantian tag hilang. Unggahan bobot otomatis sesudah penggantian belum diperlihatkan. \\
+Wardhana dkk.~(\citeyear{wardhana2026pemantauan})\newline \textit{Interactive Mobile IoT Application for Monitoring Etawa Crossbreed (PE) Goat Growth in Rural Communal Farms} & Pemantauan kambing peranakan etawa & Integrasi timbangan IoT dan aplikasi seluler & Bobot, pakan, kesehatan, kebergunaan & Seluruh 20 catatan uji terkirim. Uji tersebut belum mencakup kiriman ulang setelah penggantian tag. \\
+Amrulloh dkk.~(\citeyear{amrulloh2024integrasi})\newline \textit{Penerapan Web Service dalam Mengintegrasikan IoT dengan Platform Investasi Berbasis Website dan Mobile Android} & Pemantauan bobot kambing & Layanan web yang menghubungkan timbangan ke aplikasi & Kode RFID, bobot, pengiriman data & Uji fungsi menunjukkan alur pengiriman. Ketepatan profil saat unggahan tertunda masih perlu diuji. \\
+Decandia dkk.~(\citeyear{decandia2026domba})\newline \textit{Detection of Nutritionally Driven Live Weight Changes in Dairy Ewes Using a Walk-over-Weighing System} & Perubahan bobot induk domba Sarda & Timbangan lintasan dan bolus elektronik & Bobot berulang dan perlakuan nutrisi & Menunjukkan kegunaan riwayat bobot individu. Pengenalnya berupa bolus di rumen. \\
+Firdausa dkk.~(\citeyear{firdausa2026preferensi})\newline \textit{Analisis preferensi konsumen domba pada segmen potong harian di Kabupaten Garut} & Preferensi pembeli domba potong di Garut & Survei terhadap 31 responden & Bobot, umur, harga & Memberi konteks penggunaan informasi bobot pada segmen pasar yang diteliti. \\
+Karakus dkk.~(\citeyear{karakus2015tag})\newline \textit{Performance of electronic and visual ear tags in lambs under extensive conditions in Turkey} & Retensi tag pada anak domba & Pengamatan tag telinga elektronik dan visual & Kehilangan dan keterbacaan tag & Kehilangan tag di lapangan mendasari kebutuhan untuk menjaga riwayat individu. \\
+Savoia dkk.~(\citeyear{savoia2023dtreo})\newline \textit{Dtreo, a flexible cloud-based data-recording platform for data-driven decisions in sheep and goat industries} & Pencatatan ternak di lapangan & Aplikasi Dtreo untuk pencatatan daring dan luring & Data individu, konektivitas, validasi & Petugas dapat mencatat saat luring. Pergantian tag selama data mengantre belum dibahas. \\
+Lee dkk.~(\citeyear{lee2015rifl})\newline \textit{Implementing Linearizability at Large Scale and Low Latency} & Konsistensi operasi yang dikirim ulang & Pengenal permintaan dan penyimpanan hasil pada RAMCloud & Percobaan ulang dan efek operasi & Memberi dasar untuk mengenali lintasan yang sudah diproses. Pengujian asal menggunakan sistem penyimpanan terdistribusi. \\
+Penelitian yang diusulkan & Kesinam\-bungan riwayat domba & Aplikasi seluler, identitas tetap, dan rekonsiliasi unggahan & Masa penugasan tag, waktu ukur, kelengkapan, duplikasi & Akan menguji profil setelah tag diganti, keterlacakan unggahan tag lama, dan jumlah bobot resmi per lintasan. \\
+\end{longtable}
+\endgroup
 
-\section{Posisi dan Kesenjangan Penelitian (\textit{Research Gap})}
+\section{Posisi dan Kebaruan Penelitian}
 
-Tinjauan literatur menunjukkan bahwa sistem timbangan ternak berbasis IoT dengan aplikasi seluler dan web telah dibangun, termasuk untuk kambing. Berdasarkan penelusuran pustaka yang digunakan dalam proposal ini, kualitas pengukuran pada sistem-sistem tersebut belum menjadi pokok penelitian. Kondisi bobot stabil ditentukan secara kualitatif, belum ada penilaian kualitas untuk setiap pembacaan, dan perilaku jalur data pada kondisi sinyal buruk belum diuji. Padahal, bobot badan berkaitan dengan nilai ternak (Rianto dkk., 2026), sedangkan pendugaan tanpa timbangan masih memiliki penyimpangan sekitar 8,5\% hingga 8,7\% pada rumus yang diuji pada sapi Bali (Septyan dkk., 2023).
+Dari pustaka yang ditelaah, terdapat bukti terpisah mengenai penggantian tag,
+pengiriman bobot ke aplikasi, pencatatan luring, dan pengenalan permintaan berulang.
+Studi aplikasi ternak pada Tabel~\ref{tab:penelitian-terdahulu} belum melaporkan
+pengujian yang mengikuti satu hasil timbang sejak direkam dengan tag lama hingga
+unggahannya selesai setelah penggantian tag. Urutan kejadian tersebut penting karena
+keputusan menyimpan bukti pengukuran dan keputusan menambahkan bobot ke profil domba
+memiliki konsekuensi berbeda bagi riwayat yang dibaca operator.
 
-Penelitian ini diposisikan untuk mengisi celah tersebut melalui tiga kesenjangan. Kesenjangan pertama adalah metode deteksi bobot stabil pada timbangan berpalang pintu untuk kambing. Sinyal \textit{load cell} dibaca secara kontinu selama kambing berada pada timbangan, kemudian jendela pembacaan dengan variansi terendah dipilih dan nilai mediannya dilaporkan sebagai bobot. Galat, bias, dan keterulangan metode ini diukur terhadap timbangan acuan pada kambing hidup, sehingga hasilnya dapat dibandingkan dengan galat pendugaan berbasis ukuran tubuh.
+Pada aplikasi yang diusulkan, satu profil akan menggunakan identitas domba yang tetap.
+Saat operator mengganti tag, aplikasi akan menutup masa penugasan tag lama dan memulai
+penugasan tag baru pada profil yang sama. Aplikasi akan memeriksa apakah tag baru
+masih aktif pada profil lain sebelum menyimpan perubahan. Dengan membuka profil dan
+memindai tag pengganti melalui aplikasi, operator dapat menjalankan penggantian tanpa
+perlu memahami konfigurasi perangkat IoT. Catatan kesehatan, pemberian pakan,
+reproduksi, dan bobot yang sudah tercatat tetap merujuk pada identitas domba tersebut.
 
-Kesenjangan kedua adalah lapisan kualitas data pada setiap penimbangan. Setiap pembacaan diberi skor kualitas berdasarkan variansi sinyal dan lamanya kambing diam. Aplikasi meminta penimbangan ulang apabila skor rendah. Gagasan ini sejalan dengan skor kepercayaan pada Smart-Herbo yang menandai estimasi untuk ditinjau ulang (Shuvo dkk., 2026), tetapi diterapkan pada pembacaan timbangan kambing, bukan pada estimasi citra sapi. Pada riwayat bobot setiap ekor, pencilan juga dapat disaring. Algoritma Kalman filter with impulse noisy outliers (kfino) telah divalidasi pada data bobot hasil \textit{walk-over-weighing} yang banyak memuat pencilan (Gonzalez-Garcia dkk., 2025). Dalam penelitian ini, kfino dibandingkan dengan filter median sederhana.
+Satu percobaan penimbangan, yang disebut lintasan, dapat menghasilkan sejumlah sampel
+dan satu hasil dari perangkat. ESP32 akan menentukan bobot stabil, sedangkan layanan
+penerimaan akan memeriksa kelengkapan data dan keabsahan hasil ukur. Untuk mencatat
+bobot resmi, layanan juga mensyaratkan waktu pengukuran yang tepercaya dan tepat satu
+penugasan tag yang cocok pada waktu itu serta masih aktif saat unggahan selesai.
+Jika unggahan tag lama baru
+selesai sesudah penggantian, layanan akan menyimpan sampel, tag lama, dan waktu
+pengukuran untuk penelusuran tanpa menambahkan bobot resmi. Aturan ini mencegah hasil
+lama muncul pada domba lain apabila tag tersebut kelak dipakai kembali.
 
-Kesenjangan ketiga adalah jalur data \textit{offline-first} yang diuji. Kandang sering memiliki sinyal lemah, sehingga aplikasi menyimpan pembacaan secara lokal dan menyinkronkannya setelah koneksi pulih. Aplikasi luring pada penelitian terdahulu, yaitu Smart-Herbo dan DigiZiege, bekerja dengan pendugaan berbasis citra, bukan dengan timbangan (Shuvo dkk., 2026; Kulesz, 2026). Dalam penelitian ini, jalur data dari timbangan hingga basis data diuji melalui skenario pemutusan koneksi dengan indikator tingkat keberhasilan sinkronisasi, kehilangan data, dan duplikasi data.
+Pembedaan antara lintasan dan kiriman memungkinkan aplikasi memeriksa apa yang masih
+kurang setelah sambungan pulih. Layanan akan mengenali setiap lintasan melalui
+pengenal yang tetap dan setiap sampel melalui nomornya dalam lintasan. Unggahan
+sebagian akan tetap menunggu kelengkapannya. Pengiriman ulang data yang sama akan
+merujuk pada catatan yang sudah tersimpan, sedangkan isi yang berbeda pada pengenal
+yang sama akan ditahan untuk pemeriksaan. Dengan aturan tersebut, satu lintasan yang
+memenuhi syarat hanya boleh menambah satu bobot resmi, berapa pun jumlah percobaan
+pengirimannya.
 
-Dengan demikian, penelitian ini tidak bertumpu pada kebaruan teknologi pembangun aplikasi, melainkan pada kualitas dan keandalan data penimbangan kambing yang diukur secara terukur. Data yang akurat dan terjamin kualitasnya dapat menjadi dasar pengembangan lanjutan, misalnya platform jual beli ternak yang menampilkan data terukur kepada calon pembeli.
+Pengujian akan dimulai dari tugas operator untuk membuat atau membuka profil, memasukkan
+catatan pemeliharaan, dan membuka riwayat pemeliharaan pada profil yang sama.
+Pengujian integrasi selanjutnya akan mengikuti satu domba sebelum dan sesudah
+penggantian tag serta mencakup unggahan sebagian, kiriman ulang, konflik penugasan,
+dan waktu pengukuran yang meragukan. Hasil akan diperiksa melalui profil tujuan,
+keberadaan bukti asli, dan jumlah bobot resmi per lintasan. Untuk memeriksa masukan
+perangkat, uji penimbangan akan menggunakan timbangan acuan dan mencakup keadaan
+ketika angka tampak stabil meskipun domba belum sepenuhnya berada di atas platform.
+Dengan demikian, kesalahan pengukuran dapat dibedakan dari kesalahan penentuan profil
+atau penyimpanan hasil.

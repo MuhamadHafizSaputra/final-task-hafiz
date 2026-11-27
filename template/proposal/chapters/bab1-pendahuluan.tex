@@ -3,84 +3,164 @@
 
 \section{Latar Belakang}
 
-Riwayat bobot setiap domba diperlukan untuk menelusuri perubahan bobot dari satu
-penimbangan ke penimbangan berikutnya. Decandia dkk.~(\citeyear{decandia2026domba})
-menggunakan timbangan otomatis dan identifikasi elektronik untuk mengikuti perubahan
-bobot individu pada domba perah. Dalam penelitian tersebut, penimbangan konvensional
-memerlukan penanganan ternak sehingga pengukuran berulang memerlukan banyak tenaga.
-Pencatatan hasil penimbangan juga memerlukan cara untuk memastikan bahwa setiap bobot
-tercatat pada profil domba yang benar.
+Untuk menelusuri riwayat seekor domba, operator perlu mengetahui kapan domba
+tersebut ditimbang, pakan apa yang diberikan, serta peristiwa kesehatan dan
+reproduksi apa yang pernah dicatat. Setiap catatan perlu memuat identitas domba
+yang sama agar operator dapat menemukan kembali rangkaian peristiwa tersebut.
+Pada ternak sapi, Aisuwarya dkk.~(\citeyear{aisuwarya2019rfid}) mengembangkan
+aplikasi untuk mencatat identitas, kesehatan, inseminasi, dan kelahiran ternak.
+Pada domba perah, Decandia dkk.~(\citeyear{decandia2026domba}) menggunakan
+identifikasi elektronik saat penimbangan untuk mengikuti perubahan bobot
+setiap individu dari waktu ke waktu.
 
-Pencatatan manual dapat menyulitkan penyusunan riwayat bobot ketika operator perlu
-menyalin hasil timbangan dan mencocokkannya dengan identitas ternak. Pada peternakan
-kambing komunal yang diteliti Wardhana dkk.~(\citeyear{wardhana2026pemantauan}),
-operator masih menimbang dan mencatat hasil secara manual dengan prosedur yang belum
-seragam. Pada peternakan domba mitra, penelitian ini akan mengamati cara operator
-mengenali domba, mencatat hasil penimbangan, dan menemukan kembali riwayat bobotnya.
-Pengamatan tersebut akan menjadi dasar perbandingan antara alur kerja yang berjalan
-dan alur yang diusulkan.
+Sebagai contoh, operator yang membandingkan dua hasil penimbangan seekor
+domba mungkin perlu melihat apakah ada perubahan pemberian jenis pakan atau
+tindakan kesehatan yang tercatat di antara kedua tanggal penimbangan.
+Untuk induk domba, operator juga dapat memeriksa apakah ada peristiwa
+reproduksi, seperti kelahiran, dalam rentang waktu yang sama. Jika setiap
+jenis data disimpan dalam catatan terpisah, operator perlu mencocokkan
+identitas dan tanggal pada beberapa catatan untuk menyusun urutan peristiwa.
+Profil per domba akan memungkinkan operator membuka riwayat individu yang
+dimaksud dan menelusuri peristiwa yang berdekatan dengan waktu penimbangan.
 
-Sistem berbasis \textit{Internet of Things} (IoT) dapat menghubungkan timbangan
-dengan aplikasi pencatatan. Amrulloh dkk.~(\citeyear{amrulloh2024integrasi})
-mengintegrasikan timbangan kambing dengan aplikasi web dan seluler melalui layanan
-web. Sistem tersebut mengirim hasil penimbangan ketika angka pada monitor tidak
-lagi berubah secara drastis. Wardhana dkk.~(\citeyear{wardhana2026pemantauan})
-menggunakan identifikasi frekuensi radio (\textit{radio frequency identification},
-RFID) untuk menghubungkan hasil timbangan dengan identitas kambing dan menampilkan
-riwayatnya pada aplikasi seluler.
+Ketika penimbangan dan pencatatan dilakukan secara terpisah, operator harus
+mencocokkan angka pada timbangan dengan identitas ternak sebelum menyalinnya.
+Wardhana dkk.~(\citeyear{wardhana2026pemantauan}) melaporkan bahwa peternak
+kambing di kandang komunal yang mereka teliti menggunakan kertas atau
+mengandalkan ingatan untuk mencatat data ternak. Jika identitas atau waktu
+penimbangan terlewat saat pencatatan, operator dapat kesulitan menentukan
+ternak dan penimbangan yang dimaksud ketika membaca kembali catatan tersebut.
+Pada peternakan domba mitra, penelitian ini akan mengamati cara operator
+mengenali ternak, mencatat peristiwa pada setiap domba, dan menemukan kembali
+riwayatnya. Hasil pengamatan akan digunakan sebagai dasar perbandingan dengan
+alur pencatatan melalui aplikasi.
 
-Tag RFID dapat diganti ketika tag lama hilang. Aisuwarya
-dkk.~(\citeyear{aisuwarya2019rfid}) menyediakan fungsi penggantian tag yang hilang
-pada aplikasi pencatatan sapi. Dalam sistem yang menggabungkan penggantian tag
-dengan penimbangan otomatis, kode tag yang terbaca saat penimbangan dapat berbeda
-dari kode tag aktif ketika data diterima. Sebagai contoh, timbangan dapat menyimpan
-hasil saat koneksi terputus, lalu menyelesaikan unggahan setelah operator mengganti
-tag pada profil domba yang sama. Jika server hanya mencocokkan kode tag dengan
-penugasan yang aktif saat unggahan diterima, catatan dapat kehilangan kaitannya
-dengan domba asal atau masuk ke profil yang keliru setelah tag digunakan kembali.
+Berdasarkan diskusi awal dengan peternak mitra, sebagian informasi mengenai
+domba belum dicatat secara rutin. Menurut peternak, ketersediaan riwayat per
+domba dapat membantunya menjelaskan kondisi ternak kepada calon pembeli.
+Sebagai contoh, ketika calon pembeli menanyakan bobot seekor domba, peternak
+dapat merujuk pada hasil penimbangan beserta tanggal pengukurannya.%tambahkan contoh jenis pakan dan riwayat vaksin, karena itu. 
 
-Penelitian ini mengusulkan purwarupa timbangan domba berbasis IoT yang terhubung
-dengan aplikasi seluler untuk operator. Mikrokontroler ESP32 akan mendeteksi bobot
-stabil pada timbangan dan menyimpan data penimbangan secara lokal ketika koneksi
-terputus. Aplikasi akan mempertahankan identitas tetap pada setiap profil domba
-serta menyimpan waktu mulai dan berakhirnya setiap penugasan tag RFID. Dengan
-demikian, operator dapat mengganti tag dan menelusuri riwayat bobot pada profil
-domba yang sama.
+Jika tersedia dalam riwayat pemeliharaan domba yang sama, peternak juga dapat
+menunjukkan jenis pakan yang pernah diberikan serta tanggal dan jenis vaksin
+yang tercantum dalam catatan vaksinasi.
 
-Rekonsiliasi adalah proses pemeriksaan kelengkapan data penimbangan yang diunggah
-serta pencocokan data tersebut dengan riwayat penugasan tag dan catatan yang telah
-diterima. Layanan sisi server akan memeriksa hasil ukur, waktu pengukuran, dan
-penugasan tag untuk menentukan apakah hasil dapat masuk ke riwayat bobot resmi.
-Jika unggahan penimbangan dengan tag lama selesai setelah penggantian tag,
-sistem akan menyimpan data penimbangan beserta kode tag dan waktu pengukuran
-asal untuk penelusuran. Hasil tersebut tetap berada di luar riwayat bobot resmi.
-Pengujian akan memeriksa apakah unggahan ulang data yang sama mempertahankan
-catatan yang sudah tersimpan tanpa menghasilkan entri ganda.
+Bobot juga menjadi pertimbangan dalam pembelian domba untuk potong harian di
+Kabupaten Garut. Firdausa dkk.~(\citeyear{firdausa2026preferensi}) melaporkan
+bahwa responden pada segmen tersebut paling menyukai kisaran 25--35~kg di
+antara pilihan bobot yang diteliti. Kebutuhan yang disampaikan mitra menjadi
+salah satu alasan untuk menghimpun catatan pemeliharaan dan hasil penimbangan
+pada profil domba yang sama.
 
-Pengembangan purwarupa ini berkaitan dengan bidang lingkungan cerdas dalam
-draf Peta Jalan Penelitian dan Pengabdian kepada Masyarakat Departemen Ilmu
-Komputer dan Elektronika FMIPA UGM 2023--2027, yang mencakup IoT dan jaringan
-sensor \citep[hlm.~22]{dike2023petajalan}. Penelitian ini menerapkan IoT untuk
-menyalurkan data dari timbangan ke aplikasi pencatatan domba. Kontribusi yang
-diusulkan adalah pengembangan dan pengujian alur pencatatan yang menjaga
-kesinambungan identitas domba ketika tag RFID diganti dan menangani unggahan
-penimbangan yang tertunda atau berulang.
+Integrasi timbangan dengan aplikasi berbasis \textit{Internet of Things}
+(IoT) memungkinkan perangkat mengirim hasil pengukuran langsung ke sistem
+pencatatan. Amrulloh dkk.~(\citeyear{amrulloh2024integrasi}) menerapkan
+layanan web untuk mengirim hasil timbangan kambing ke platform yang dapat
+diakses melalui aplikasi web dan seluler. Wardhana
+dkk.~(\citeyear{wardhana2026pemantauan}) menggunakan identifikasi frekuensi
+radio (\textit{radio frequency identification}, RFID) untuk mengaitkan hasil
+penimbangan dengan identitas kambing. Pada aplikasi yang sama, peternak dapat
+memasukkan catatan pemberian pakan dan kesehatan. Dengan rancangan seperti
+ini, sebuah profil ternak dapat menghimpun hasil pengukuran dari perangkat
+dan catatan yang dimasukkan oleh operator.
+
+Riwayat yang terkumpul pada suatu profil tetap diperlukan ketika tag yang
+biasa digunakan untuk mengenali ternak hilang. Aisuwarya
+dkk.~(\citeyear{aisuwarya2019rfid}) menyediakan fungsi penggantian tag yang
+hilang pada aplikasi pencatatan sapi. Pada aplikasi domba yang diusulkan,
+operator akan membuka profil domba yang telah dikenali, memilih penggantian
+tag, lalu mendekatkan tag baru ke pembaca setelah aplikasi menyatakan
+timbangan siap. Setelah operator menyimpan penggantian tersebut, hasil
+penimbangan berikutnya dengan tag baru dapat dicatat pada profil yang juga
+memuat riwayat penimbangan dengan tag lama.
+
+Alur penggantian tag dirancang agar operator dapat menjalankannya tanpa %add changing rfid without iot knowledge example
+memerlukan pengetahuan teknis tentang IoT. Sebagai contoh, jika timbangan
+sedang digunakan untuk menimbang, aplikasi akan memberi tahu operator
+bahwa pemindaian tag baru dapat dicoba setelah penimbangan selesai. Ketika
+pemindaian berhasil, aplikasi akan menampilkan kode tag agar operator dapat
+memeriksanya sebelum menyimpan. Dengan petunjuk ini, operator dapat
+menentukan tindakan berikutnya dari layar aplikasi, sementara sistem
+menangani komunikasi dengan timbangan dan memperbarui penugasan tag.
+
+Penggantian tag juga perlu memperhitungkan hasil yang sudah direkam oleh
+timbangan tetapi masih menunggu untuk diunggah. Dalam skenario yang akan
+diuji, seekor domba ditimbang menggunakan
+tag lama saat koneksi terputus. Setelah koneksi pulih, operator mengganti tag
+pada profil domba tersebut sebelum perangkat selesai mengunggah hasil
+penimbangan. Jika sistem hanya memeriksa penugasan tag yang aktif saat data
+diterima, hasil itu dapat dikaitkan dengan domba yang keliru ketika tag lama
+digunakan kembali. Pengiriman ulang hasil yang sama juga dapat menghasilkan
+catatan ganda apabila sistem memperlakukannya sebagai penimbangan baru.
+
+\begin{sesudahrevisi}
+Pengembangan sistem penimbangan dan pencatatan domba ini merupakan proyek
+\textit{capstone} yang dikerjakan oleh dua mahasiswa. Rekan satu tim akan
+mengembangkan timbangan, termasuk pembacaan tag RFID, penentuan bobot stabil
+pada ESP32, dan penyimpanan data di perangkat saat koneksi terputus.
+Dalam proyek ini, penulis bertanggung jawab atas aplikasi seluler, basis data,
+serta layanan yang menerima dan mencocokkan hasil penimbangan dengan riwayat
+penugasan tag. Kedua anggota tim akan menyepakati format data yang dikirim
+timbangan dan menguji alurnya hingga hasil yang memenuhi syarat tercatat pada
+profil domba yang sesuai.
+\end{sesudahrevisi}
+
+Penelitian ini mengusulkan aplikasi seluler yang menyatukan catatan operator
+dan hasil dari timbangan IoT pada profil domba dengan identitas tetap.
+Operator akan menggunakan profil tersebut untuk mencatat dan menelusuri
+riwayat kesehatan, pemberian pakan, dan reproduksi. Untuk menjaga
+kesinambungan riwayat bobot, sistem akan menyimpan masa berlaku setiap
+penugasan tag RFID. Ketika data tiba, layanan penerimaan akan mencocokkan
+kode tag dan waktu pengukuran dengan riwayat penugasan serta memeriksa apakah
+penimbangan yang sama sudah tersimpan. Proses rekonsiliasi ini memungkinkan
+data dari tag lama tetap tersedia untuk penelusuran setelah penggantian tag.
+
+Penggunaan timbangan sebagai sumber data bagi aplikasi berkaitan dengan
+bidang lingkungan cerdas dalam draf peta jalan penelitian Departemen Ilmu
+Komputer dan Elektronika FMIPA UGM 2023--2027, yang mencakup IoT dan
+jaringan sensor \citep[hlm.~22]{dike2023petajalan}. Pada penelitian ini,
+pengujian akan mengikuti satu domba dari penimbangan dengan tag lama hingga
+penimbangan berikutnya dengan tag baru. Pemeriksaan akan mencakup profil
+tempat bobot baru tercatat, keberadaan data dari tag lama setelah unggahan
+selesai, dan jumlah catatan bobot setelah perangkat mengirim ulang data yang
+sama.
 
 \section{Rumusan Masalah}
 
+Aplikasi pencatatan domba perlu menghubungkan catatan operator dan hasil
+penimbangan dengan profil domba yang sesuai. Penggantian tag RFID dan
+perbedaan antara waktu pengukuran dan waktu unggah perlu diperhitungkan agar
+riwayat setiap domba tetap dapat ditelusuri. Berdasarkan kebutuhan tersebut,
+penelitian ini merumuskan empat pertanyaan berikut.
+
 \begin{enumerate}
-  \item Bagaimana mengintegrasikan deteksi bobot stabil pada timbangan IoT
-        dengan pencatatan bobot domba, dan berapa galat terhadap timbangan
-        acuan serta proporsi percobaan yang menghasilkan bobot yang diterima?
-  \item Bagaimana menjaga agar hasil penimbangan yang memenuhi syarat sebelum
-        dan sesudah penggantian tag RFID tercatat pada profil domba yang sama?
-  \item Bagaimana merekonsiliasi unggahan sebagian, unggahan yang selesai
-        setelah penggantian tag, dan unggahan berulang agar data dapat
-        ditelusuri serta riwayat bobot resmi bebas dari salah pencatatan
-        identitas dan duplikasi pada skenario yang diuji?
+  \setlength{\emergencystretch}{1.5em}
+  \item Bagaimana mengembangkan aplikasi seluler yang memungkinkan operator
+        mengelola data profil domba serta mencatat dan menelusuri riwayat
+        kesehatan, pemberian pakan, dan reproduksi?
+  \item Bagaimana mengintegrasikan timbangan berbasis IoT dengan aplikasi
+        seluler agar hasil penimbangan tercatat pada profil domba yang sesuai
+        dan riwayat bobotnya dapat ditelusuri oleh operator?
+  \item Bagaimana merancang penyimpanan identitas domba dan riwayat penugasan
+        tag RFID agar operator dapat mengganti tag dan tetap menelusuri
+        riwayat bobot melalui profil domba yang sama?
+  \item Bagaimana merancang rekonsiliasi data penimbangan agar data yang
+        selesai diunggah setelah penggantian tag RFID tetap tersimpan untuk
+        penelusuran dan pengiriman ulang data yang sama tidak membuat catatan
+        bobot ganda?
 \end{enumerate}
 
-\section{Batasan Masalah}
+\section{Batasan Masalah}%add briding paragraf like in sudais
+
+\begin{sesudahrevisi}
+Penelitian ini berfokus pada alur pencatatan yang digunakan operator, mulai
+dari membuka profil domba hingga menelusuri hasil penimbangannya. Karena
+hasil timbang berasal dari perangkat yang dikembangkan bersama dalam proyek
+\textit{capstone}, ruang lingkup penelitian perlu memperjelas peran timbangan
+dan perangkat lunak pada setiap tahap. Batasan berikut menetapkan objek
+penelitian, kondisi pencatatan bobot, serta skenario penggantian tag dan
+pengiriman data yang akan diuji.
+\end{sesudahrevisi}
 
 \begin{enumerate}
   \item Objek penelitian adalah domba. Alur penggunaan mencakup operator yang
@@ -111,27 +191,23 @@ penimbangan yang tertunda atau berulang.
 
 \section{Tujuan Penelitian}
 
-\begin{enumerate}
-  \item Mengembangkan integrasi timbangan IoT dan aplikasi pencatatan domba
-        dengan deteksi bobot stabil pada ESP32, serta mengukur galat terhadap
-        timbangan acuan dan proporsi percobaan yang menghasilkan bobot yang
-        diterima.
-  \item Mengembangkan pencatatan profil dengan identitas domba tetap dan riwayat
-        penugasan tag RFID, serta memeriksa ketepatan profil untuk bobot yang
-        dicatat sebelum dan sesudah penggantian tag.
-  \item Mengembangkan dan menguji rekonsiliasi unggahan sebagian, tertunda, dan
-        berulang dengan memeriksa kelengkapan data yang tersimpan, ketepatan
-        pemasukan hasil ke riwayat resmi, dan jumlah catatan bobot ganda.
-\end{enumerate}
+Penelitian ini bertujuan mengembangkan aplikasi seluler yang memungkinkan
+operator mengelola profil domba serta mencatat dan menelusuri riwayat
+kesehatan, pemberian pakan, dan reproduksi. Aplikasi akan diintegrasikan
+dengan timbangan berbasis IoT agar hasil penimbangan dapat dicatat pada
+profil domba yang sesuai. Penelitian ini juga akan merancang penyimpanan
+identitas tetap dan riwayat penugasan tag RFID, serta mengembangkan layanan
+untuk menangani unggahan tertunda dan pengiriman ulang. Pengujian akan
+memeriksa fungsi pencatatan dan penelusuran riwayat, kesinambungan profil
+setelah penggantian tag, keterlacakan data yang terlambat diunggah, serta
+pencegahan catatan bobot ganda saat data yang sama dikirim ulang.
 
 \section{Manfaat Penelitian}
 
-\begin{enumerate}
-  \item \textbf{Manfaat akademik.} Rancangan dan hasil pengujian diharapkan
-        dapat menjadi acuan untuk mengevaluasi kesinambungan identitas ternak
-        dan rekonsiliasi data ketika perangkat IoT mengunggah hasil setelah
-        koneksi pulih.
-  \item \textbf{Manfaat praktis.} Purwarupa diharapkan dapat membantu operator
-        mengurangi penyalinan manual hasil timbangan dan menelusuri riwayat bobot
-        domba pada profil yang sama setelah penggantian tag RFID.
-\end{enumerate}
+Secara praktis, aplikasi ini diharapkan membantu operator menemukan riwayat
+bobot, kesehatan, pemberian pakan, dan reproduksi melalui satu profil domba
+serta menelusuri kembali riwayat bobot setelah tag RFID diganti. Secara
+akademik, rancangan dan hasil pengujian penelitian ini diharapkan dapat
+menjadi rujukan bagi pengembangan sistem pencatatan ternak berbasis IoT yang
+menggunakan identitas tetap dan riwayat penugasan tag, serta bagi pengujian
+sistem yang menerima unggahan penimbangan tertunda atau berulang.
