@@ -157,6 +157,8 @@ Aturan berikut dirumuskan dari pola penulisan pada `examples/contoh_proposal.pdf
 
 #### Istilah, angka, dan sitasi
 
+- Gunakan **catatan pemeliharaan** untuk entri yang disimpan di aplikasi, **riwayat pemeliharaan** untuk kumpulan catatan dari waktu ke waktu, dan **kegiatan pemeliharaan** untuk tindakan peternak, seperti memberi pakan atau obat.
+
 - Definisikan singkatan saat pertama kali digunakan, misalnya `Internet of Things (IoT)`, lalu gunakan bentuk singkat secara konsisten.
 - Gunakan format `dkk.` untuk tiga penulis atau lebih dalam narasi berbahasa Indonesia; gunakan `dan` untuk dua penulis.
 - Pastikan setiap klaim faktual penting memiliki sitasi yang sesuai. Jangan menambahkan sitasi yang belum tersedia di `references.bib`.
@@ -180,6 +182,13 @@ Aturan berikut dirumuskan dari pola penulisan pada `examples/contoh_proposal.pdf
 ---
 
 ## Pedoman untuk AI Assistant (Kewajiban Model)
+
+### Penandaan revisi naskah
+
+- Setiap kali kalimat atau paragraf yang sudah ada dalam proposal atau skripsi direvisi, pertahankan teks sebelumnya secara utuh dan tampilkan teks penggantinya tepat setelahnya, di lokasi revisi dalam naskah.
+- Untuk proposal, gunakan sorotan saja tanpa label versi. Gunakan merah muda muda untuk teks lama dan kuning muda untuk teks baru. Untuk skripsi, pertahankan label sebelum dan sesudah revisi.
+- Tandai satuan teks terkecil yang tetap dapat dipahami. Untuk paragraf yang direvisi sebagai satu kesatuan, tampilkan satu pasangan paragraf. Untuk revisi berulang, pertahankan urutan versi dan tandai versi terkini. Untuk penambahan murni, cukup sorot teks baru.
+- Gunakan penanda LaTeX yang mendukung pemenggalan baris, istilah bercetak miring, dan sitasi. Setelah kompilasi, pastikan kedua versi tampil terbaca. Pertahankan penandaan sampai pengguna meminta penerimaan revisi atau salinan bersih.
 
 1. **Jangan pernah mengarang sumber (hallucination):** Kutip hanya referensi yang benar-benar ada dalam `references.bib` atau yang telah divalidasi. Beri tahu pengguna jika sumber hanya dibaca pada tingkat abstrak.
 2. **Jangan asumsikan keputusan desain sebagai final:** Perlakukan keputusan yang tercantum di bagian "Open decisions" pada `docs/project-handoff-context.md` sebagai opsi yang menunggu konfirmasi.
