@@ -36,6 +36,18 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+% Sorotan naskah untuk pembandingan versi selama penelaahan proposal.
+\definecolor{revisilama}{RGB}{255,232,237}
+\definecolor{revisibaru}{RGB}{255,248,202}
+\tcbset{blokrevisi/.style={breakable,boxrule=0pt,arc=0pt,outer arc=0pt,
+  boxsep=0pt,left=5pt,right=5pt,top=4pt,bottom=4pt,
+  before skip=5pt,after skip=5pt,fonttitle=\small\bfseries,coltitle=black,
+  toptitle=3pt,bottomtitle=1pt}}
+\newtcolorbox{sebelumrevisi}{blokrevisi,colback=revisilama,colframe=revisilama}
+\newtcolorbox{sesudahrevisi}{blokrevisi,colback=revisibaru,colframe=revisibaru}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{enumitem}
