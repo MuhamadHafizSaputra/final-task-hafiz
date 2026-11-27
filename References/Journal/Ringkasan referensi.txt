@@ -1,0 +1,78 @@
+RINGKASAN REFERENSI PROPOSAL
+
+Penerapan Web Service dalam Mengintegrasikan IoT dengan Platform Investasi Berbasis Website dan Mobile Android
+Amrulloh et al. - 2024 (Iot - Web Integration).pdf
+Penulis menghubungkan timbangan kambing ber-RFID dengan platform investasi yang memiliki
+aplikasi web dan Android. Layanan REST meneruskan kode ternak dan bobot saat angka pada
+monitor tidak lagi berubah drastis. Dari sebelas butir uji fungsi, delapan berhasil.
+Kaitan dengan proposal — Contoh integrasi timbangan dengan aplikasi. Uji fungsi tersebut
+belum mengukur galat bobot terhadap timbangan acuan atau menilai unggahan setelah tag
+diganti.
+
+Implementasi Teknologi RFID (Radio Frequency Identification) untuk Recording Data Ternak Sapi
+Ratna Aisuwarya - 2019 (The Usage of RFID).pdf
+Pada sistem pencatatan sapi di Padang Mengatas dan kelompok tani mitra, pembacaan RFID
+membuka akses ke data individu pada aplikasi Android. Data mencakup kesehatan, inseminasi,
+kelahiran, dan pertumbuhan. Gambar 7 menunjukkan antarmuka untuk mengganti tag yang hilang.
+Kaitan dengan proposal — Rujukan langsung untuk profil dan alur penggantian tag. Antarmuka
+itu belum menjelaskan nasib hasil timbang otomatis yang masih tersimpan di perangkat.
+
+Detection of Nutritionally Driven Live Weight Changes in Dairy Ewes Using a Walk-over-Weighing System
+Decandia et al. - 2026 (Monitoring Bobot Domba).pdf
+Penulis mengikuti bobot induk domba Sarda yang dikenali melalui bolus elektronik saat
+melewati timbangan. Percobaan mencakup 24 induk tidak menyusui di kandang dan 48 induk
+menyusui pada percobaan penggembalaan. Rangkaian bobot memperlihatkan perubahan yang
+berkaitan dengan perbedaan perlakuan nutrisi.
+Kaitan dengan proposal — Mendasari manfaat pengukuran berulang per individu. Hasilnya
+berkaitan dengan perubahan bobot selama pengamatan dan tidak menetapkan galat timbangan
+proposal.
+
+Roadmap Penelitian dan Pengabdian Masyarakat DIKE 2023--2027
+DIKE FMIPA UGM - Peta Jalan Penelitian 2023-2027.pdf
+Draf peta jalan DIKE FMIPA UGM memetakan arah penelitian dan pengabdian departemen untuk
+2023–2027. Bagian lingkungan cerdas mencakup Internet of Things dan jaringan sensor.
+Kaitan dengan proposal — Memberi konteks institusional bagi integrasi perangkat dan
+aplikasi. Dokumen ini merupakan peta jalan, sehingga tidak menyediakan hasil uji produk.
+
+Analisis preferensi konsumen domba pada segmen potong harian di Kabupaten Garut
+Firdausa et al. - 2026 (Preferensi Konsumen Domba Garut).pdf
+Survei pada tiga lokasi pasar hewan di Kabupaten Garut melibatkan 31 responden yang dipilih
+secara purposif. Pada segmen potong harian yang diteliti, responden menyukai domba berumur
+kurang dari satu tahun dan kategori bobot 25–35 kg.
+Kaitan dengan proposal — Menjelaskan alasan peternak mungkin ingin menunjukkan informasi
+bobot. Survei tersebut tidak mengukur pengaruh aplikasi terhadap harga atau kepercayaan
+pembeli.
+
+Performance of electronic and visual ear tags in lambs under extensive conditions in Turkey
+Karakus et al. - 2015 (Retensi Tag Domba).pdf
+Peneliti mengikuti keterbacaan dan kehilangan tag telinga elektronik serta visual pada anak
+domba Akkaraman di Turki. Dalam tujuh bulan pertama, empat dari 380 tag elektronik hilang.
+Temuan ini menunjukkan bahwa identitas fisik dapat terputus selama pemeliharaan.
+Kaitan dengan proposal — Mendasari pemisahan identitas tetap domba dari nomor tag. Frekuensi
+kehilangan di peternakan mitra masih perlu dibuktikan secara lokal.
+
+Implementing Linearizability at Large Scale and Low Latency
+Lee et al. - 2015 (RIFL).pdf
+Penulis mengimplementasikan RIFL pada RAMCloud untuk menangani permintaan yang dikirim
+ulang, termasuk ketika layanan sudah menjalankan operasi tetapi balasannya tidak sampai.
+Pengenal yang tetap serta catatan penyelesaian yang disimpan bersama perubahan memungkinkan
+layanan mengenali operasi terdahulu.
+Kaitan dengan proposal — Memberi dasar untuk menguji efek kiriman berulang per lintasan.
+Penelitian ini menguji sistem penyimpanan terdistribusi dan tidak membahas identitas ternak.
+
+Dtreo, a flexible cloud-based data-recording platform for data-driven decisions in sheep and goat industries
+Savoia et al. - 2023 (Dtreo dan Pencatatan Luring).pdf
+Makalah prosiding ICAR menjelaskan Dtreo, platform pencatatan data individu untuk program
+peternakan. Petugas dapat mencatat melalui telepon atau tablet saat koneksi terbatas. Contoh
+penerapan mencakup program pembibitan di Etiopia dan pengumpulan data kambing di desa-desa
+di India.
+Kaitan dengan proposal — Menunjukkan pemisahan waktu pencatatan lapangan dan waktu data
+tersedia di pusat. Penanganan kiriman yang melewati penggantian tag tidak dijelaskan.
+
+Interactive Mobile IoT Application for Monitoring Etawa Crossbreed (PE) Goat Growth in Rural Communal Farms
+Wardhana et al. - 2026 (Iot - Web Integration).pdf
+Aplikasi seluler untuk kambing peranakan etawa mengintegrasikan hasil timbangan berbasis
+ESP32 dan RFID dengan catatan pakan serta kesehatan. Dalam uji yang dilaporkan, seluruh 20
+catatan pemantauan berhasil dikirim. Skor rata-rata System Usability Scale adalah 83,5.
+Kaitan dengan proposal — Pembanding untuk alur operator dan tampilan riwayat. Keberhasilan
+20 pengiriman tidak membuktikan pencegahan catatan ganda pada pengiriman ulang.

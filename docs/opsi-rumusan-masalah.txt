@@ -1,0 +1,18 @@
+A. Pengembangan aplikasi
+
+Bagaimana mengembangkan aplikasi seluler yang membantu operator mencatat dan menelusuri riwayat bobot setiap domba?
+Bagaimana mengintegrasikan hasil penimbangan dari timbangan IoT dengan aplikasi seluler agar operator dapat melihat hasilnya pada profil domba yang sesuai?
+B. Identitas domba dan penggantian tag RFID
+
+Bagaimana merancang penyimpanan identitas domba agar riwayat bobot sebelum dan sesudah penggantian tag RFID tetap dapat ditelusuri melalui profil yang sama?
+Bagaimana merancang alur penggantian tag RFID pada aplikasi agar operator dapat mengganti tag pada profil yang sama dan mencegah satu tag aktif terpasang pada dua profil?
+C. Penanganan unggahan data penimbangan
+
+Bagaimana merancang layanan penerimaan data yang dapat memeriksa kelengkapan unggahan sebelum hasil penimbangan dicatat ke riwayat bobot resmi?
+Bagaimana menyimpan data penimbangan yang baru selesai diunggah setelah tag RFID diganti agar data asal tetap dapat ditelusuri dan hasilnya tidak masuk ke riwayat bobot resmi?
+Bagaimana menangani pengiriman ulang data penimbangan yang sama agar sistem tidak membuat catatan bobot ganda?
+Bagaimana merancang rekonsiliasi data penimbangan untuk menangani unggahan sebagian, unggahan yang selesai setelah penggantian tag RFID, dan pengiriman ulang?
+D. Pengujian perangkat lunak
+
+Sejauh mana sistem dapat mempertahankan riwayat pada profil domba yang sama setelah penggantian tag RFID, menyimpan data yang terlambat diunggah untuk penelusuran, dan mencegah pencatatan ganda?
+Bagaimana perbandingan alur pencatatan yang digunakan operator saat ini dengan alur pada aplikasi dalam mencatat hasil penimbangan dan menemukan kembali riwayat bobot domba?

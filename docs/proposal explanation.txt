@@ -1,0 +1,12 @@
+Perbedaan rumusan masalah 3 dan 4
+
+Poin 3 berkaitan dengan rekonsiliasi. Dalam alur proyek ini, poin 3 membentuk riwayat penugasan tag yang kemudian dipakai untuk merekonsiliasi data pada poin 4.
+
+Misalnya, pukul 10.00 operator mengganti tag A dengan tag B pada profil Domba 12. Sistem mencatat kapan penugasan A berakhir dan B dimulai. Itu poin 3. Proses ini sudah selesai meskipun hari itu tidak ada penimbangan.
+
+Pukul 10.05, timbangan mengunggah hasil yang direkam pukul 09.50 dengan tag A. Sistem harus mencocokkan kode tag dan waktu ukur dengan riwayat penugasan tadi, menyimpan bukti dari tag lama, dan mengenali kiriman yang sama jika terulang. Pencocokan itulah rekonsiliasi pada poin 4.
+
+Keduanya layak dipisahkan. Usulan redaksi poin 3 untuk memperjelas perbedaannya:
+“Bagaimana mengelola pergantian tag RFID agar operator tetap dapat mengakses profil dan riwayat bobot domba yang sama melalui tag pengganti?”
+
+Redaksi tersebut masih berupa usulan.
