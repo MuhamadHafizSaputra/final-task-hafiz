@@ -1,0 +1,102 @@
+% Dokumen kerja untuk pembaruan kerangka Bab 3 proposal.
+\documentclass[12pt,a4paper]{report}
+\usepackage[margin=3cm]{geometry}
+\renewcommand{\chaptername}{Bab}
+\setcounter{chapter}{2}
+\begin{document}
+\chapter{Metode dan Rancangan Penelitian}
+
+\section{Deskripsi Umum Penelitian}
+Uraikan alur operator mulai dari membuka profil domba, mencatat kegiatan
+pemeliharaan, memindai tag RFID, hingga menelusuri bobot pada aplikasi.
+Siapkan diagram arsitektur yang menunjukkan hubungan antara timbangan berbasis
+Internet of Things (IoT), penyimpanan lokal, layanan penerima unggahan,
+basis data, dan aplikasi seluler. Jelaskan pembagian kerja Hafiz pada
+aplikasi, basis data, dan rekonsiliasi unggahan serta Lutfi pada perangkat
+keras dan perangkat tegar. Keduanya menyepakati format pertukaran data dan
+menjalankan pengujian integrasi.
+
+\section{Metodologi Penelitian}
+Awali bagian ini dengan bagan alir yang menunjukkan tahapan di bawah,
+penanggung jawab, serta kegiatan yang telah dan akan dilakukan.
+
+\subsection{Analisis Kebutuhan Sistem}
+Turunkan kebutuhan yang akan dirancang dan diuji dari empat masalah pada
+Bab~1. Untuk setiap kebutuhan, tentukan tindakan operator atau perangkat
+dan hasil yang dapat diperiksa.
+\begin{enumerate}
+\item Operator perlu mengelola profil domba serta menyimpan dan menemukan
+kembali catatan kesehatan, pemberian pakan, dan reproduksi pada profil terkait.
+\item Hasil timbang yang memenuhi syarat perlu tercatat pada profil domba
+yang sesuai. Operator perlu dapat menelusuri hasil tersebut melalui riwayat
+bobot pada aplikasi.
+\item Operator perlu mengganti tag RFID pada profil yang sama. Identitas tetap
+domba dan riwayat penugasan tag perlu menghubungkan bobot yang sudah tercatat
+sebelum penggantian dengan hasil penimbangan menggunakan tag baru.
+\item Sistem perlu menyimpan lintasan yang selesai diunggah setelah penugasan
+tag lama berakhir, beserta tag asal dan waktu pengukurannya. Pengiriman ulang
+lintasan yang sama perlu dikenali agar riwayat bobot resmi bebas dari duplikasi.
+\end{enumerate}
+
+\textbf{Cakupan minimum prototipe yang akan dikembangkan dan diuji}
+mencakup pengelolaan profil dan catatan pemeliharaan, pencatatan hasil
+timbang IoT yang memenuhi syarat pada profil yang tepat, penggantian tag RFID
+dengan riwayat bobot yang tetap dapat ditelusuri pada profil yang sama, serta
+rekonsiliasi unggahan tertunda dan berulang. Setelah penggantian tag,
+lintasan tertunda dari tag lama tetap tersimpan untuk penelusuran di luar
+riwayat bobot resmi. Pengiriman ulang data yang sama tidak menambah catatan
+bobot resmi.
+
+\subsection{Perancangan Aplikasi dan Basis Data}
+Rancang alur pengelolaan profil, pengisian catatan pemeliharaan, penggantian
+tag, dan penelusuran riwayat bobot. Siapkan diagram relasi entitas yang
+menunjukkan hubungan antara identitas tetap domba, penugasan tag beserta masa
+berlakunya, catatan pemeliharaan, lintasan, dan catatan bobot resmi.
+
+\subsection{Perancangan Integrasi Timbangan dan Rekonsiliasi}
+Rancang format data lintasan, penomoran sampel, pemeriksaan kelengkapan,
+serta konfirmasi penyimpanan kepada perangkat. Jelaskan syarat pencatatan
+bobot resmi berdasarkan keabsahan hasil ukur, kelengkapan data, waktu
+pengukuran yang tepercaya, dan satu penugasan tag yang cocok saat pengukuran
+serta masih aktif. Siapkan diagram urutan yang memperlihatkan waktu
+pengukuran, penggantian tag, penyelesaian unggahan, dan pengiriman ulang.
+
+\subsection{Pengembangan dan Integrasi Prototipe}
+Uraikan urutan pengembangan aplikasi dan layanan sisi server, penyambungan
+ESP32 ke layanan penerima unggahan, serta penyajian hasil pada profil domba.
+Keluaran tahap ini berupa prototipe terintegrasi yang dapat digunakan operator
+untuk mencatat kegiatan pemeliharaan dan menelusuri hasil penimbangan.
+
+\subsection{Pengujian dan Analisis Data}
+Rencanakan pengujian menyeluruh dari perangkat IoT hingga aplikasi seluler.
+Untuk setiap skenario, tetapkan profil dan penugasan tag awal, tindakan uji,
+serta hasil yang diharapkan. Cocokkan identitas lintasan, tag, waktu ukur,
+dan bobot pada log perangkat dengan rekaman basis data dan riwayat yang
+benar-benar dilihat operator pada aplikasi.
+\begin{enumerate}
+\item \textbf{Profil dan catatan pemeliharaan.} Simpan catatan kesehatan,
+pemberian pakan, dan reproduksi, lalu buka kembali profil untuk memeriksa
+isi dan identitas domba. Laporkan jumlah skenario yang lulus atas seluruh
+skenario yang dijalankan.
+\item \textbf{Penimbangan hingga aplikasi.} Ikuti satu lintasan sejak
+pemindaian RFID dan deteksi bobot stabil pada ESP32 hingga satu bobot resmi
+muncul pada profil yang tepat. Bandingkan hasil timbang dengan timbangan
+acuan. Hitung galat absolut dalam kilogram dan proporsi lintasan yang
+menghasilkan bobot diterima. Sertakan pembacaan tidak stabil dan pembacaan
+yang tampak stabil saat domba baru berada sebagian di atas platform.
+\item \textbf{Penggantian tag.} Mulai dengan satu bobot resmi dari tag A.
+Ganti tag A dengan tag B pada profil yang sama, lalu timbang kembali.
+Periksa masa penugasan kedua tag dan pastikan operator dapat melihat bobot
+lama serta bobot valid dari tag B melalui profil yang sama.
+\item \textbf{Unggahan tertunda dan berulang.} Timbang domba dengan tag A
+saat koneksi terputus. Setelah koneksi pulih, simpan penggantian ke tag B
+sebelum unggahan lintasan A selesai. Timbang dengan tag B, selesaikan
+unggahan lintasan A, lalu kirim ulang lintasan tersebut. Periksa bahwa
+lintasan A tetap dapat ditelusuri dengan tag dan waktu ukur asal, bobot
+resmi hanya bertambah satu dari lintasan B, dan pengiriman ulang menghasilkan
+nol duplikasi. Uji pula unggahan sebagian, konflik penugasan tag, serta
+waktu pengukuran yang meragukan.
+\end{enumerate}
+Jumlah domba, jumlah pengulangan, prosedur kalibrasi, aturan deteksi bobot
+stabil, dan ambang galat masih perlu disepakati sebelum pengujian.
+\end{document}
