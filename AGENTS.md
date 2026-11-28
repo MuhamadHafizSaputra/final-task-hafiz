@@ -1,6 +1,7 @@
 # AGENTS.md — Pedoman dan Referensi Penulisan Skripsi UGM
 
-> **Panduan resmi:** `@examples/pedoman_ta.pdf`  
+> **Panduan resmi:** `@examples/pedoman_ta.pdf` — BAB 4 Proyek Kolaboratif (Capstone Project); sistematika proposal pada 4.3.1, halaman PDF 56--58 (halaman cetak 49--51).  
+> **Contoh struktur proposal:** `@examples/Proposal Sudais.pdf`  
 > **Contoh Proposal:** `@examples/contoh_proposal.pdf`  
 > **Contoh Skripsi:** `@examples/contoh_skripsi.pdf`
 
@@ -14,7 +15,7 @@
 
 ---
 
-## Jenis TA: Skripsi Inovasi Produk
+## Jenis TA: Proyek Kolaboratif (Capstone Project)
 
 Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Proyek ini mengembangkan sistem penimbangan dan pencatatan domba berbasis IoT dengan deteksi bobot stabil. Fokusnya adalah kesinambungan identitas domba setelah penggantian tag RFID dan rekonsiliasi data penimbangan yang terlambat diunggah. Judul dan rincian lingkup dicatat dalam `docs/project-handoff-context.md`.
 
@@ -34,12 +35,17 @@ Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Proyek ini
 | Abstract | ✅ | Contoh memiliki, pedoman tidak menyebut — ikuti contoh |
 
 ### Bagian Utama
-| Bab | Judul | Isi |
-|-----|-------|-----|
-| **Bab 1** | Pendahuluan | Latar Belakang, **Rumusan Masalah**, Batasan Masalah, Tujuan Penelitian, Manfaat Penelitian |
-| **Bab 2** | Penelitian Terkait | State of the art, literatur review |
-| **Bab 3** | Metode dan Rancangan Penelitian | Deskripsi umum, metodologi, bagan alir, perancangan sistem |
-| **Bab 4** | Jadwal Penelitian | Gantt Chart berbasis bulan |
+
+Gunakan susunan bab dan subbab pada `examples/Proposal Sudais.pdf` sebagai pola, disesuaikan dengan topik penelitian. Untuk isi dan rincian setiap bagian, ikuti pedoman resmi 4.3.1; pedoman tetap menjadi prioritas utama. Subtahap metodologi disesuaikan dengan kegiatan penelitian, bukan disalin dari topik Sudais.
+
+| Bab | Judul | Struktur dan isi |
+|-----|-------|-----------------|
+| **Bab 1** | Pendahuluan | 1.1 Latar Belakang; 1.2 Rumusan Masalah; 1.3 Batasan Masalah; 1.4 Tujuan Penelitian; 1.5 Manfaat Penelitian. Sertakan hubungan roadmap riset atau teknologi dengan roadmap departemen, fakultas, atau universitas sesuai pedoman. |
+| **Bab 2** | Penelitian Terkait | 2.1 State of the Art sesuai topik; 2.2 Tinjauan Penelitian Terdahulu; 2.3 Posisi dan Kebaruan Penelitian. Uraikan teknologi atau metode, hasil terdahulu, dan keterbatasannya. |
+| **Bab 3** | Metode dan Rancangan Penelitian | 3.1 Deskripsi Umum Penelitian; 3.2 Metodologi Penelitian, dengan subsubbab tahapan sesuai proyek. Jelaskan teknik pengumpulan data dan sertakan bagan alir yang menunjukkan kegiatan yang sudah dan akan dilakukan, peran setiap peneliti, tahap perencanaan, pelaksanaan, analisis data, hasil yang diharapkan, serta indikator capaian terukur. |
+| **Bab 4** | Jadwal Penelitian | 4.1 Jadwal Penelitian; jadwal dapat menggunakan Gantt Chart berbasis bulan. |
+
+Untuk Bab 3, gunakan judul "Metode dan Rancangan Penelitian" sesuai pedoman 4.3.1.
 
 ### Bagian Akhir
 | Elemen | Ada? |
@@ -79,15 +85,18 @@ Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Proyek ini
 | Intisari | ✅ | Bahasa Indonesia |
 | Abstract | ✅ | Bahasa Inggris |
 
-### Bagian Utama (Inovasi Produk — Bab 3.2 Pedoman)
+### Bagian Utama (Proyek Kolaboratif — 4.3.2 Pedoman)
+
+Ikuti pedoman 4.3.2. Karena pedoman melompat dari Bab 1 ke Bab 3, Bab 2 menggunakan struktur Identifikasi Masalah dan Ide Inovatif yang sebelumnya tersedia.
+
 | Bab | Judul | Isi |
 |-----|-------|-----|
-| **Bab 1** | Pendahuluan | Latar Belakang, **Perumusan Produk**, Batasan Produk, Tujuan, Manfaat |
-| **Bab 2** | Identifikasi Masalah dan Ide Inovatif | Identifikasi masalah nyata + pengembangan ide inovatif |
-| **Bab 3** | Kajian Ilmiah | Tinjauan pustaka + dasar ilmiah produk (metode, algoritma, teknologi) |
-| **Bab 4** | Perancangan Prototipe/Produk | Arsitektur, UI/UX, database, rancangan teknis |
-| **Bab 5** | Proses Pembuatan Produk | Implementasi, kode, integrasi komponen |
-| **Bab 6** | Pengujian dan Evaluasi Produk | Metode pengujian, skenario, hasil, evaluasi kinerja + **Kesimpulan dan Saran** |
+| **Bab 1** | Pendahuluan | Latar belakang dan permasalahan, tujuan, ruang lingkup, serta manfaat proyek kolaboratif. |
+| **Bab 2** | Identifikasi Masalah dan Ide Inovatif | Identifikasi masalah nyata dan pengembangan ide inovatif. |
+| **Bab 3** | Rancangan Sistem | Deskripsi rancangan, diagram arsitektur, WBS dan penanggung jawab, diagram alir, rancangan antarmuka, perangkat keras, dan basis data sesuai relevansinya. |
+| **Bab 4** | Implementasi | Teknologi yang digunakan, proses pengembangan, cuplikan kode penting, dan integrasi komponen. |
+| **Bab 5** | Pengujian dan Evaluasi Produk | Metode, data dan skenario pengujian, hasil, analisis, serta evaluasi kinerja jika memungkinkan. |
+| **Bab 6** | Kesimpulan | Ketercapaian tujuan dan efektivitas solusi terhadap permasalahan. |
 
 ### Bagian Akhir
 | Elemen | Ada? |
@@ -103,12 +112,12 @@ Mahasiswa mengembangkan produk/aplikasi/prototipe berbasis teknologi. Proyek ini
 |-------|----------|---------|
 | Class option | `[proposal]` | `[skripsi]` |
 | Cover text | "PROPOSAL TUGAS AKHIR" | "SKRIPSI" |
-| Judul Bab 1 | Rumusan **Masalah** | **Perumusan Produk** |
+| Isi Bab 1 | Rumusan Masalah dan bagian pendahuluan | Latar belakang, tujuan, ruang lingkup, dan manfaat |
 | Bab 2 | Penelitian Terkait | Identifikasi Masalah dan Ide Inovatif |
-| Bab 3 | Metode dan Rancangan | Kajian Ilmiah |
-| Bab 4 | Jadwal Penelitian | Perancangan Produk |
-| Bab 5 | ❌ Tidak ada | Proses Pembuatan Produk |
-| Bab 6 | ❌ Tidak ada | Pengujian dan Evaluasi Produk |
+| Bab 3 | Metode dan Rancangan Penelitian | Rancangan Sistem |
+| Bab 4 | Jadwal Penelitian | Implementasi |
+| Bab 5 | ❌ Tidak ada | Pengujian dan Evaluasi Produk |
+| Bab 6 | ❌ Tidak ada | Kesimpulan |
 | Preliminary pages | Minimal | Lengkap |
 | Lampiran | ❌ Tidak ada | ✅ Ada |
 
